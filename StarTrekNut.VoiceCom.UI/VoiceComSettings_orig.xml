@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VoiceComSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DefaultTtsVoice>Salli</DefaultTtsVoice>
+  <WarcraftExecutableName>Wow-64</WarcraftExecutableName>
+  <EnableCommandAck>true</EnableCommandAck>
+  <CharacterProfileSettingsList>
+    <CharacterProfileSettings CharacterName="Todd">
+      <VoiceCommands>
+        <VoiceCommand>
+          <Grammer>foo</Grammer>
+          <KeyStrokes>bar</KeyStrokes>
+        </VoiceCommand>
+      </VoiceCommands>
+    </CharacterProfileSettings>
+    <CharacterProfileSettings CharacterName="zxeltor">
+      <VoiceCommands>
+        <VoiceCommand>
+          <Grammer>foo</Grammer>
+          <KeyStrokes>bar</KeyStrokes>
+        </VoiceCommand>
+        <VoiceCommand>
+          <Grammer>welcome to the jungle2</Grammer>
+          <KeyStrokes>we've got fun and games</KeyStrokes>
+        </VoiceCommand>
+      </VoiceCommands>
+    </CharacterProfileSettings>
+    <CharacterProfileSettings CharacterName="remarkabull">
+      <VoiceCommands>
+        <VoiceCommand>
+          <Grammer>foo</Grammer>
+          <KeyStrokes>bar</KeyStrokes>
+        </VoiceCommand>
+        <VoiceCommand>
+          <Grammer>welcome to the jungle2</Grammer>
+          <KeyStrokes>we've got fun and games</KeyStrokes>
+        </VoiceCommand>
+        <VoiceCommand>
+          <Grammer>welcome remarkabull</Grammer>
+          <KeyStrokes>hell yah</KeyStrokes>
+        </VoiceCommand>
+      </VoiceCommands>
+    </CharacterProfileSettings>
+  </CharacterProfileSettingsList>
+  <Hotkeys>
+    <Key>RightCtrl</Key>
+  </Hotkeys>
+</VoiceComSettings>

@@ -1,0 +1,38 @@
+﻿<Window x:Class="StarTrekNut.VoiceCom.UI.Dialogs.ExePicker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StarTrekNut.VoiceCom.UI.Dialogs"
+        mc:Ignorable="d"
+        Title="Application Picker" Height="431.413" Width="811.739" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
+    <Grid Background="#FFE5E5E5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70*"/>
+            <ColumnDefinition Width="30*"/>
+        </Grid.ColumnDefinitions>
+        <Button Name="uiButApply" Content="Apply" Margin="0,0,103,10" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom" Click="uiButApply_Click" Grid.Column="1"/>
+        <Button Name="uiButCancel" Content="Cancel" Margin="0,0,10,10" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="uiButCancel_Click" Grid.Column="1"/>
+        <RichTextBox Margin="5.391,10,10,39" IsReadOnly="True" Grid.Column="1">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="Info:"/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="1) You can only select an application that's running."/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="2) The can only choose an application with a window."/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <ListView Name="uiListViewProcs" Margin="10" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=ProcessName}"/>
+                    <GridViewColumn Header="Window Title" DisplayMemberBinding="{Binding Path=MainWindowTitle}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
