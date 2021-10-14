@@ -71,7 +71,6 @@ You can use this feature to save/export your application settings to a XML file 
 ##### Software Update Check 
 With this enabled, the software will check for the latest version of Voice Command Interface online and verify your running the latest version. 
 ## Use with World of Warcraft
-I started by adding spells and abilities to my actions bars, then setting keybinds to those spells and abilities. I used SHIFT+F1, CTRL+F1, and etc. I then created a voice recognition profile for WOW, and added voice commands to send the keystrokes like SHIFT+F1, CTRL+F1, and etc to WOW.
-
+I started by adding spells and abilities to my actions bars, then setting keybinds to those spells and abilities. I used SHIFT+F1, CTRL+F1, and etc. I then created a voice recognition profile for WOW, and added voice commands to send keystrokes like SHIFT+F1, CTRL+F1, and etc to WOW.
 ![ProfileTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/ProfilesTab.png)
 As an example from the above profile tab. When I say "engage bull rush", the SHIFT+F1 key combination is sent to WOW, and WOW responds by clicking the actionbar button I keybinded with SHIFT-F1.
