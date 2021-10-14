@@ -19,17 +19,17 @@ The application has evolved quite a bit over the past few years. It started out 
 ### Status Bar 
 ![StatusBar](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/StatusBar.png) 
 #### Settings: 
-##### Targeted Application (Circled in green) 
+- __Targeted Application (Circled in green)__ -
 This shows the targeted application, along with status of the target application. (Running or Not Running) 
-##### Selected Profile (Circled in red) 
+- __Selected Profile (Circled in red)__ -
 This shows the currently selected voice recognition profile. 
-##### Speech Recognition 
+- __Speech Recognition__ -
 You can enable/disable speech recognition used by the application. You can use this to temporarily turn off speech recognition instead of closing the application. 
-Note: Speech Recognition is automatically disabled when you change certain settings. You will be forced to save your changes before you can enable voice recognition again. 
-##### Save Settings 
+__Note:__ Speech Recognition is automatically disabled when you change certain settings. You will be forced to save your changes before you can enable voice recognition again. 
+- __Save Settings__ -
 This allows you to save your settings changes. 
-Note: You will receive a notification in the status bar of when a profile change was made. If you don’t save your profile changes, they will be lost when you close the application. 
-##### Application Link (Circled in blue) 
+__Note:__ You will receive a notification in the status bar when a profile change is made. If you don’t save your profile changes, they will be lost when you close the application. 
+- __Application Link (Circled in blue)__ -
 This is just a link to the applications web site. 
 ### Log Tab 
 ![LogTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/LogTab.png) 
@@ -38,43 +38,43 @@ This tab logs recognized voice commands which were processed and sent to our tar
 ![ProfileTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/ProfilesTab.png) 
 This tab displays the currently selected voice recognition profile. The main grid displays the various speech recognition commands, along with the keystroke to send to your target application. 
 #### Settings: 
-##### Application 
+- __Application__ -
 This is the currently targeted windows application. You can add new applications which are currently running, or remove an existing one. 
-Note: This will only work with Windowed applications. Not console applications. 
-##### Profile 
+__Note:__ This will only work with Windowed applications. Not console applications. 
+- __Profile__ -
 Each targeted application can have multiple voice recognition profiles. When this is changed, the main grid is updated to reflect the voice commands saved under the currently selected profile. 
-Note: I thought this would come in handy when trying to support multiple characters in WOW, along with their multiple specs. 
-##### Create Profile 
+__Note:__ I thought this would come in handy when trying to support multiple characters in WOW, along with their multiple specs. 
+- __Create Profile__ -
 Used to create a new voice recognition profile for the currently selected Application. 
 ### Key Translations Tab 
 ![KeyTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/KeyTranslationTab.png) 
 This tab maintains a map of windows keyboard keys which require translation, so they'll be recognized by the targeted windows application. A separate map of these keys is saved for each target application. New applications are given a default list, which can be modified. 
-Note: It's not likely you'll ever have to change these keys. 
+__Note:__ It's not likely you'll need to change these keys. 
 ### Recognition Tab 
 ![RecogTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/RecognitionTab.png) 
 This tab can be used to change various windows defaults. 
 #### Settings: 
-##### Microphone 
+- __Microphone__ -
 The application uses the windows default microphone. As a convenience it's displayed here. 
-##### Voice Recognition Engine 
+- __Voice Recognition Engine__ -
 By default, the application uses the default recognition engine available to windows. If for some reason you have another option, you can give it a try. 
-Note: This has only been tested with the following recognition engine "Microsoft Speech Recognizer 8.0 for Windows (English - US)". I can't guarantee it will work with others. 
-##### Voice Command Acknowledgement: Enable 
+__Note:__ This has only been tested with the following recognition engine "Microsoft Speech Recognizer 8.0 for Windows (English - US)". I can't guarantee it will work with others. 
+- __Voice Command Acknowledgement: Enable__ - 
 When a voice command is recognized and processed, the application can play a TTS (Text-to-speech) acknowledgement to the user. You can enable/disable this feature. 
-##### Voice Command Acknowledgement: Test 
+- __Voice Command Acknowledgement: Test__ - 
 Use this to test your Voice Command Acknowledgement settings. 
-##### Voice Command Acknowledgement: Operating System Voice 
+- __Voice Command Acknowledgement: Operating System Voice__ -
 Use can choose any windows installed voice to be used with Voice Command Acknowledgement. 
-##### Voice Command Acknowledgement: Volume 
+- __Voice Command Acknowledgement: Volume__ -
 You can set the volume level for Voice Command Acknowledgement. 
 ### Options Tab 
 ![OptionsTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/OptionsTab.png)  
 #### Settings: 
-##### Hotkeys 
+- __Hotkeys__ -
 Hotkeys are used to suppress speech recognition. For example, if you have discord open and a push-to-talk key set, you can add your push-to-talk key to the Hotkeys list. This will pause speech recognition until you’re done talking to your teammates. 
-##### Import / Export 
+- __Import / Export__ -
 You can use this feature to save/export your application settings to a XML file as a backup. 
-##### Software Update Check 
+- __Software Update Check__ -
 With this enabled, the software will check for the latest version of Voice Command Interface online and verify your running the latest version. 
 ## Use with World of Warcraft
 I started by adding spells and abilities to my actions bars, then setting keybinds to those spells and abilities. I used SHIFT+F1, CTRL+F1, and etc. I then created a voice recognition profile for WOW, and added voice commands to send keystrokes like SHIFT+F1, CTRL+F1, and etc to WOW.
