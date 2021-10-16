@@ -1,4 +1,4 @@
-# Voice Command Interface 
+# Voice Command Interface 3.3.0
 ![VCILogo](https://github.com/zxeltor/voice_command_interface/blob/main/OrcYell.png)
 * [Overview](#overview)
 * [Details](#details)
