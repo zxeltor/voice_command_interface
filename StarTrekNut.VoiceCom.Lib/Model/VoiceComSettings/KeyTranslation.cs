@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Text.RegularExpressions;
 
 namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 {
@@ -15,7 +16,9 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
         private bool _enabled;
         private Key _key;
         private string _translation;
-
+        private static readonly Regex _regexAltKey = new Regex(@"%\((.+)\)", System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly Regex _regexShiftKey = new Regex(@"\+\((.+)\)", System.Text.RegularExpressions.RegexOptions.Compiled);
+        private static readonly Regex _regexControlKey = new Regex(@"\^\((.+)\)", System.Text.RegularExpressions.RegexOptions.Compiled);
 
         public KeyTranslation() { }
         public KeyTranslation(Key key, string translation)
@@ -117,8 +120,8 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
             // The plus sign (+), caret (^), percent sign (%), tilde (~), and parentheses () have special meanings to
         };
 
-        public static string GetSendKeysString(bool hasShiftMod, bool hasCtrlMod, bool hasAltMod, Key key, ObservableCollection<KeyTranslation> keyTranslations)
-        {
+        public static string GetSendKeysString(Key key, ObservableCollection<KeyTranslation> keyTranslations)
+        {            
             var resultString = string.Empty;
 
             var keyTranslation = keyTranslations.FirstOrDefault(keyTran => keyTran.Key == key);
@@ -136,20 +139,87 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
             // CTRL ^
             // ALT %
 
-            if (hasShiftMod)
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             {
                 resultString = $"+({resultString})";
             }
-            if (hasCtrlMod)
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 resultString = $"^({resultString})";
             }
-            if (hasAltMod)
+            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
             {
                 resultString = $"%({resultString})";
             }
 
             return resultString;
+        }
+        
+        public static string GetVisualKeyString(Key key)
+        {
+            var resultString = new StringBuilder();
+
+            if (Keyboard.IsKeyDown(Key.LeftShift)) resultString.Append(Key.LeftShift.ToString()).Append("+");
+            if (Keyboard.IsKeyDown(Key.RightShift)) resultString.Append(Key.RightShift.ToString()).Append("+");
+            if (Keyboard.IsKeyDown(Key.LeftCtrl)) resultString.Append(Key.LeftCtrl.ToString()).Append("+");
+            if (Keyboard.IsKeyDown(Key.RightCtrl)) resultString.Append(Key.RightCtrl.ToString()).Append("+");
+            if (Keyboard.IsKeyDown(Key.LeftAlt)) resultString.Append(Key.LeftAlt.ToString()).Append("+");
+            if (Keyboard.IsKeyDown(Key.RightAlt)) resultString.Append(Key.RightAlt.ToString()).Append("+");
+
+            // SHIFT +
+            // CTRL ^
+            // ALT %
+
+            return resultString.Append(key.ToString()).ToString();
+        }
+
+        private static string GetTranslatedKey(string sendKeysString, List<KeyTranslation> keyTranslations)
+        {
+            var keyTranslation = keyTranslations.FirstOrDefault(tran => tran.Translation.Equals(sendKeysString, StringComparison.CurrentCultureIgnoreCase));
+            if (keyTranslation == null)
+                return sendKeysString;
+            else
+                return keyTranslation.Key.ToString();
+        }
+
+        public static string GetVisualStringFromSendKeysString(string sendKeysString, List<KeyTranslation> keyTranslations)
+        {
+            if (string.IsNullOrWhiteSpace(sendKeysString)) return sendKeysString;
+
+            var hasCtrl = _regexControlKey.IsMatch(sendKeysString);
+            var hasShift = _regexShiftKey.IsMatch(sendKeysString);
+            var hasAlt = _regexAltKey.IsMatch(sendKeysString);
+
+            if(!hasAlt && !hasCtrl && !hasShift)
+            {
+                return GetTranslatedKey(sendKeysString, keyTranslations);
+            }
+
+            var matchesAlt = _regexAltKey.Matches(sendKeysString);
+            foreach (Match match in matchesAlt)
+            {
+                var matchString = match.Groups[0].Value;
+                var strippedString = match.Groups[1].Value;
+                sendKeysString = sendKeysString.Replace(matchString, $"{Key.LeftAlt}+{GetTranslatedKey(strippedString, keyTranslations)}");
+            }
+
+            var matchesCtrl = _regexControlKey.Matches(sendKeysString);
+            foreach(Match match in matchesCtrl)
+            {
+                var matchString = match.Groups[0].Value;
+                var strippedString = match.Groups[1].Value;
+                sendKeysString = sendKeysString.Replace(matchString, $"{Key.LeftCtrl}+{GetTranslatedKey(strippedString, keyTranslations)}");
+            }
+
+            var matchesShift = _regexShiftKey.Matches(sendKeysString);
+            foreach (Match match in matchesShift)
+            {
+                var matchString = match.Groups[0].Value;
+                var strippedString = match.Groups[1].Value;
+                sendKeysString = sendKeysString.Replace(matchString, $"{Key.LeftShift}+{GetTranslatedKey(strippedString, keyTranslations)}");
+            }
+
+            return sendKeysString;
         }
 
         public static KeyTranslation Clone(KeyTranslation keyTranslation)

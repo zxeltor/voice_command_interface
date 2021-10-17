@@ -64,7 +64,7 @@
             <DockPanel>
                 <TextBlock Foreground="DarkBlue" HorizontalAlignment="Center">
                     <TextBlock.Text>
-                        <Binding Path="KeyStrokes" Mode="OneWay" />
+                        <Binding Path="VisualKeyStrokes" Mode="OneWay" />
                     </TextBlock.Text>
                 </TextBlock>
             </DockPanel>

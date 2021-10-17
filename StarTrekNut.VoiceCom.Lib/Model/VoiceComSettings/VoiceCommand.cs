@@ -10,6 +10,8 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 
         private string _keyStrokes;
 
+        private string _visualKeyStrokes;
+
         private bool _enabled = true;
 
         #endregion
@@ -39,6 +41,16 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
             {
                 this._keyStrokes = value;
                 this.NotifyPropertyChange("KeyStrokes");
+            }
+        }
+
+        public string VisualKeyStrokes
+        {
+            get => this._visualKeyStrokes;
+            set
+            {
+                this._visualKeyStrokes = value;
+                this.NotifyPropertyChange("SendKeyStrokes");
             }
         }
 
