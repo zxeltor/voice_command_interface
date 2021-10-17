@@ -10,7 +10,11 @@
 * [Disclaimer](#disclaimer)
 
 ## Overview
-This application takes spoken phrases, translates them into a keystroke, and sends the keystroke to a targeted Windows application.  
+VCI takes spoken phrases, translates them into a keystroke, and sends the keystroke to a targeted Windows application.  
+
+VCI wasn't meant to be used to exploit World of Warcraft, or any other windows application. I figured if you could buy a mouse to send programmable keystrokes, it would be ok to have an application that could do the same thing. As a precuation, I limited the application to sending single keystrokes with a voice command.
+
+Have fun and enjoy this application.
 ## Details
 I originally created this application to interact with World of Warcraft. I was having trouble completing the Guardian Druid mage tower challenge in the Burning Legion expansion. I was used to playing with the standard WOW interface, and a certain set of hotkeys tied to my keyboard and mouse. The Guardian Druid mage tower challenge required me to use more abilities than I could setup with my hotkeys. So ... in comes the Voice Command Interface. It gave me the opportunity to bark out voice commands tied to some of my less commonly used abilities. 
 ## Requirements
