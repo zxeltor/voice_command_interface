@@ -12,7 +12,7 @@
 ## Overview
 VCI takes spoken phrases, translates them into a keystroke, and sends the keystroke to a targeted Windows application.  
 
-VCI wasn't meant to be used to exploit World of Warcraft, or any other windows application. I figured if you could buy a mouse to send programmable keystrokes, it would be ok to have an application that could do the same thing. As a precuation, I limited the application to sending single keystrokes with a voice command.
+VCI isn't an exploitation tool for World of Warcraft, or any other windows application. I figured if you could buy a mouse to send programmable keystrokes, it would be ok to have an application that could do the same thing. As a precuation, I limited the application to sending single keystrokes with a voice command.
 
 Have fun and enjoy this application.
 ## Details
