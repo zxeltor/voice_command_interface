@@ -137,6 +137,22 @@ namespace StarTrekNut.VoiceCom.UI
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
+            else
+            {
+                userConfig.ExecutableList.ToList().ForEach(exe =>
+                {
+                    exe.ProfileSettingsList.ToList().ForEach(profile =>
+                    {
+                        profile.VoiceCommandList.ToList().ForEach(vcommand =>
+                        {
+                            if(string.IsNullOrWhiteSpace(vcommand.VisualKeyStrokes))
+                            {
+                                vcommand.VisualKeyStrokes = KeyTranslation.GetVisualStringFromSendKeysString(vcommand.KeyStrokes, exe.KeyTranslations.ToList());
+                            }
+                        });
+                    });
+                });
+            }
 
             return Properties.Settings.Default.VoiceCommandSettings;
         }

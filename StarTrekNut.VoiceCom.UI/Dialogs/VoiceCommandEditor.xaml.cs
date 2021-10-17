@@ -18,6 +18,7 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
         private ObservableCollection<VoiceCommand> _voiceCommandList;
         private ObservableCollection<KeyTranslation> _keyTranslations;
         private EditorType _editorType;
+        private string _visualKeyStrokes;
 
         #region Constructors and Destructors
 
@@ -95,6 +96,7 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
 
             this.VoiceCommand.Grammer = string.IsNullOrWhiteSpace(uiTextBoxGrammer.Text) ? string.Empty : uiTextBoxGrammer.Text;
             this.VoiceCommand.KeyStrokes = string.IsNullOrWhiteSpace(uiTextBoxKeyStrokes.Text) ? string.Empty : uiTextBoxKeyStrokes.Text;
+            this.VoiceCommand.VisualKeyStrokes = string.IsNullOrWhiteSpace(_visualKeyStrokes) ? string.Empty : _visualKeyStrokes;
 
             this.DialogResult = true;
         }
@@ -147,12 +149,10 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
                 return;
             }
 
-            this.uiTextBoxKeyStrokes.Text = KeyTranslation.GetSendKeysString(
-                Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift),
-                Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl),
-                Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt),
-                e.Key,
-                _keyTranslations);
+            KeyTranslation.GetSendKeysString(e.Key, _keyTranslations);
+
+            this.uiTextBoxKeyStrokes.Text = KeyTranslation.GetSendKeysString(e.Key, _keyTranslations);
+            this._visualKeyStrokes = KeyTranslation.GetVisualKeyString(e.Key);
 
             this.uiButRecord_Click(sender, e);
         }

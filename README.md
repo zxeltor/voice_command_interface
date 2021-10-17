@@ -1,11 +1,14 @@
-# Voice Command Interface 3.3.0
-![VCILogo](https://github.com/zxeltor/voice_command_interface/blob/main/OrcYell.png)
+# Voice Command Interface v3.4.0
+
+![VCILogo](https://github.com/zxeltor/voice_command_interface/blob/main/OrcYell.png) 
+
 * [Overview](#overview)
 * [Details](#details)
 * [Requirements](#requirements)
 * [Application Interface](#application-interface)
 * [Use with World of Warcraft](#use-with-world-of-warcraft)
 * [Disclaimer](#disclaimer)
+
 ## Overview
 This application takes spoken phrases, translates them into a keystroke, and sends the keystroke to a targeted Windows application.  
 ## Details
