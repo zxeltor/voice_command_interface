@@ -157,6 +157,11 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             this.uiButRecord_Click(sender, e);
         }
         #endregion
+
+        private void RichTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
     }
 
     public enum EditorType

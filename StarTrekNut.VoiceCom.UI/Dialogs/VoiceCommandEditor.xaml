@@ -20,13 +20,13 @@
         </Grid.ColumnDefinitions>
         <Button Name="uiButApply" Content="Apply" Margin="0,0,103,10" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom" Click="uiButApply_Click" Grid.Column="1" Grid.Row="4"/>
         <Button Name="uiButCancel" Content="Cancel" Margin="0,0,10,10" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="uiButCancel_Click" Grid.Column="1" Grid.Row="4"/>
-        <RichTextBox Margin="10,10,10,11" IsReadOnly="True" Grid.RowSpan="5" VerticalScrollBarVisibility="Auto">
+        <RichTextBox Margin="10,10,10,11" IsReadOnly="True" Grid.RowSpan="5" VerticalScrollBarVisibility="Auto" TextChanged="RichTextBox_TextChanged">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Info:"/>
                 </Paragraph>
                 <Paragraph>
-                    <Run Text="You can send a single stroke to a windows application. However, anything beyond simple characters like A-Z and 0-9 take special escape characters."/>
+                    <Run Text="You can send a single stroke to a windows application. Use the 'Record Key Stroke' button to set the 'Key Stroke' field."/>
                 </Paragraph>
                 <!--<Paragraph>
                     <Run Text="Special Characters:"/>
@@ -35,9 +35,6 @@
                     <Run Text="The plus sign (+), caret (^), percent sign (%), tilde (~), and parentheses () have special meanings. To specify one of these characters," />
                     <Run Text="enclose it within braces '({})'. For example, to specify the plus sign, use '{+}'. To specify brace characters, use '{{}' and '{}}'."/>
                 </Paragraph>-->
-                <Paragraph>
-                    <Run Text="Use the 'Record Key Stroke' button to set the 'Key Stroke' field."/>
-                </Paragraph>
                 <Paragraph>
                     <Run Text="Note: Key modifiers like CTRL, SHIFT, and ALT can be included with your key strokes."/>
                     <!--<Run Text="Using the Record Keybind feature can help you add key modifiers or other special keys/characters which are difficult to to type manually."/>-->
