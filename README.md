@@ -85,5 +85,4 @@ I started by adding spells and abilities to my actions bars, then setting keybin
 ![ProfileTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/ProfilesTab.png)
 As an example from the above profile tab. When I say "engage bull rush", the SHIFT+F1 key combination is sent to WOW, and WOW responds by clicking the actionbar button I keybinded with SHIFT-F1.
 ## Disclaimer
-This application isn't meant to be used to exploit World of Warcraft, or any other windows application. I figured if you could buy a mouse to send programmable keystrokes, it would be ok to have an application that could do the same thing. As a precuation, I limited the application to sending single keystrokes with a voice command.
-Have fun and don't do something foolish with this application.
+This software and any related documentation is provided “as is” without warranty of any kind, either express or implied, including, without limitation, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement. Licensee accepts any and all risk arising out of use or performance of Software.
