@@ -278,7 +278,7 @@
                                     <Bold>
                                         <Run Text="A: " />
                                     </Bold>
-                                    <Run Text="Key translations are necessary for translating certain keyboard keys before they're sent to a windows application via the Voice Command Interface."/>
+                                    <Run Text="Key translations are necessary for translating certain keyboard keys before they're sent to a windows application via the Voice Command Interface. It's not likely you'll ever need to modify these."/>
                                 </Paragraph>
                                 <Paragraph>
                                     <Bold>
