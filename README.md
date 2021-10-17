@@ -16,7 +16,7 @@ VCI isn't an exploitation tool for World of Warcraft, or any other windows appli
 
 Have fun and enjoy this application.
 
-__Note:__ Most of my testing has been done with World of Warcraft. It has failed miserably with Star Trek Online. In theory, this should work with MOST windows applications which launch from an actual window. This won't work with console applications.
+__Note:__ Most of my testing has been done with World of Warcraft. In theory, this should work with MOST windows applications which launch from an actual window. This won't work with console applications. I would love for VCI to work with Star Trek Online, but no luck so far. :(
 ## Details
 I originally created this application to interact with World of Warcraft. I was having trouble completing the Guardian Druid mage tower challenge in the Burning Legion expansion. I was used to playing with the standard WOW interface, and a certain set of hotkeys tied to my keyboard and mouse. The Guardian Druid mage tower challenge required me to use more abilities than I could setup with my hotkeys. So ... in comes the Voice Command Interface. It gave me the opportunity to bark out voice commands tied to some of my less commonly used abilities. 
 ## Requirements
