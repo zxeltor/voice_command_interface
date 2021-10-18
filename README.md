@@ -1,6 +1,6 @@
-# Voice Command Interface v3.4.0
+# Voice Command Interface ![GitHub release (latest by date)](https://img.shields.io/github/v/release/zxeltor/voice_command_interface)
 
-![VCILogo](https://github.com/zxeltor/voice_command_interface/blob/main/OrcYell.png) 
+![VCILogo](OrcYell.png?v17-10-2021) 
 
 * [Overview](#overview)
 * [Details](#details)
@@ -26,7 +26,7 @@ I originally created this application to interact with World of Warcraft. I was 
 ## Application Interface
 The application has evolved quite a bit over the past few years. It started out as a hardcoded app with a few voice recognition commands tied to World of Warcraft. Over time the application was updated to support other windows applications, along with user profiles and other various configurable options. On startup the application attempts to find user saved settings. If none are found, default settings are used. 
 ### Status Bar 
-![StatusBar](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/StatusBar.png) 
+![StatusBar](ScreenShots/StatusBar.png?v17-10-2021) 
 #### Settings: 
 - __Targeted Application (Circled in green)__ -
 This shows the targeted application, along with status of the target application. (Running or Not Running) 
@@ -41,10 +41,10 @@ __Note:__ You will receive a notification in the status bar when a profile chang
 - __Application Link (Circled in blue)__ -
 This is just a link to the applications web site. 
 ### Log Tab 
-![LogTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/LogTab.png) 
+![LogTab](ScreenShots/LogTab.png?v17-10-2021) 
 This tab logs recognized voice commands which were processed and sent to our target application, along with other settings changes and similar events. 
 ### Profiles Tab 
-![ProfileTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/ProfilesTab.png) 
+![ProfileTab](ScreenShots/ProfilesTab.png?v17-10-2021) 
 This tab displays the currently selected voice recognition profile. The main grid displays the various speech recognition commands, along with the keystroke to send to your target application. 
 #### Settings: 
 - __Application__ -
@@ -56,11 +56,11 @@ __Note:__ I thought this would come in handy when trying to support multiple cha
 - __Create Profile__ -
 Used to create a new voice recognition profile for the currently selected Application. 
 ### Key Translations Tab 
-![KeyTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/KeyTranslationTab.png) 
+![KeyTab](ScreenShots/KeyTranslationTab.png?v17-10-2021) 
 This tab maintains a map of windows keyboard keys which require translation, so they'll be recognized by the targeted windows application. A separate map of these keys is saved for each target application. New applications are given a default list, which can be modified. 
 __Note:__ It's not likely you'll need to change these keys. 
 ### Recognition Tab 
-![RecogTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/RecognitionTab.png) 
+![RecogTab](ScreenShots/RecognitionTab.png?v17-10-2021) 
 This tab can be used to change various windows defaults. 
 #### Settings: 
 - __Microphone__ -
@@ -77,7 +77,7 @@ Use can choose any windows installed voice to be used with Voice Command Acknowl
 - __Voice Command Acknowledgement: Volume__ -
 You can set the volume level for Voice Command Acknowledgement. 
 ### Options Tab 
-![OptionsTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/OptionsTab.png)  
+![OptionsTab](ScreenShots/OptionsTab.png?v17-10-2021)  
 #### Settings: 
 - __Hotkeys__ -
 Hotkeys are used to suppress speech recognition. For example, if you have discord open and a push-to-talk key set, you can add your push-to-talk key to the Hotkeys list. This will pause speech recognition until you’re done talking to your teammates. 
@@ -88,7 +88,7 @@ With this enabled, the software will check for the latest version of Voice Comma
 ## Use with World of Warcraft
 I started by adding spells and abilities to my actions bars, then setting keybinds to those spells and abilities. I used SHIFT+F1, CTRL+F1, and etc. I then created a voice recognition profile for WOW, and added voice commands to send keystrokes like SHIFT+F1, CTRL+F1, and etc to WOW.
 
-![ProfileTab](https://github.com/zxeltor/voice_command_interface/blob/main/ScreenShots/ProfilesTab.png)
+![ProfileTab](ScreenShots/ProfilesTab.png?v17-10-2021)
 As an example from the above profile tab. When I say "engage bull rush", the SHIFT+F1 key combination is sent to WOW, and WOW responds by clicking the actionbar button I keybinded with SHIFT-F1.
 ## Disclaimer
 This software and any related documentation is provided “as is” without warranty of any kind, either express or implied, including, without limitation, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement. Licensee accepts any and all risk arising out of use or performance of Software.
