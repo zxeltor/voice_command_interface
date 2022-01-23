@@ -33,7 +33,7 @@ namespace StarTrekNut.VoiceCom.UI
         #region Fields
 
         private MyDataContext _myDataContext;
-        private System.Threading.Timer _timerUpdateCheck;
+        private Timer _timerUpdateCheck;
 
         #endregion
 
@@ -59,10 +59,6 @@ namespace StarTrekNut.VoiceCom.UI
         #endregion
 
         #region Methods
-
-        private void _myDataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-        }
 
         private void DisplayApplicationErrorBox(string applicationErrorMessage)
         {
@@ -98,9 +94,7 @@ namespace StarTrekNut.VoiceCom.UI
 
         private VoiceCommandSettings LoadConfig()
         {
-            //var currentWindowsUser = $"{Environment.UserDomainName}\\{Environment.UserName}";
-
-            if (Properties.Settings.Default.VoiceCommandSettings == null)
+            if (Settings.Default.VoiceCommandSettings == null)
             {
                 var previousVersion = Properties.Settings.Default.GetPreviousVersion("VoiceCommandSettings");
 
@@ -115,46 +109,30 @@ namespace StarTrekNut.VoiceCom.UI
                     if (result == MessageBoxResult.Yes)
                     {
                         // If setting for the current version aren't found, let's look for a previous version.
-                        Properties.Settings.Default.Upgrade();
+                        Settings.Default.Upgrade();
                     }
                 }
 
-                if (Properties.Settings.Default.VoiceCommandSettings == null)
+                if (Settings.Default.VoiceCommandSettings == null)
                 {
-                    Properties.Settings.Default.VoiceCommandSettings = new VoiceCommandSettings();
+                    Settings.Default.VoiceCommandSettings = new VoiceCommandSettings();
                 }
             }
-
-            var userConfig = Properties.Settings.Default.VoiceCommandSettings.UserList.FirstOrDefault(); // user => user.UserName.Equals(currentWindowsUser));
+            
+            var userConfig = Settings.Default.VoiceCommandSettings.UserList.FirstOrDefault();
 
             if (userConfig == null)
             {
-                Properties.Settings.Default.VoiceCommandSettings.UserList.Add(new User());
+                Settings.Default.VoiceCommandSettings.UserList.Add(new User());
 
-                var result = MessageBox.Show(
+                MessageBox.Show(
                     $"User settings not found.  Loading default settings.",
                     "Voice Command Interface: Info",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            else
-            {
-                userConfig.ExecutableList.ToList().ForEach(exe =>
-                {
-                    exe.ProfileSettingsList.ToList().ForEach(profile =>
-                    {
-                        profile.VoiceCommandList.ToList().ForEach(vcommand =>
-                        {
-                            if(string.IsNullOrWhiteSpace(vcommand.VisualKeyStrokes))
-                            {
-                                vcommand.VisualKeyStrokes = KeyTranslation.GetVisualStringFromSendKeysString(vcommand.KeyStrokes, exe.KeyTranslations.ToList());
-                            }
-                        });
-                    });
-                });
-            }
 
-            return Properties.Settings.Default.VoiceCommandSettings;
+            return Settings.Default.VoiceCommandSettings;
         }
 
         private Executable LoadDefaultExeForUser(User selectedUser)
@@ -201,9 +179,7 @@ namespace StarTrekNut.VoiceCom.UI
 
         private User LoadUser(VoiceCommandSettings voiceCommandSettings)
         {
-            //var currentWindowsUser = $"{Environment.UserDomainName}\\{Environment.UserName}";
-
-            var userSettings = voiceCommandSettings.UserList.FirstOrDefault(); // user => user.UserName.Equals(currentWindowsUser));
+            var userSettings = voiceCommandSettings.UserList.FirstOrDefault();
             if (userSettings == null)
             {
                 this.DisplayInfoBox("Your windows username was not found in the VoiceComSettings.xml file. The application will load default settings for you, and save them to the file.");
@@ -274,14 +250,13 @@ namespace StarTrekNut.VoiceCom.UI
                 return;
             }
 
-            this.SpeechProcessor.SetHotKeys(user.HotKeysList.Where(hk => hk.GetKey().HasValue).Select(hk => hk.GetKey().Value).ToList());
+            //this.SpeechProcessor.SetHotKeys(user.HotKeysList.Where(hk => hk.GetKey().HasValue).Select(hk => hk.GetKey().Value).ToList());
+            this.SpeechProcessor.SetHotKeys(user.HotKeysList.ToList());
 
             this._myDataContext = new MyDataContext(mainSettings, user, this.SpeechProcessor);
 
             if (mainSettings.IsNewFile)
                 this.uiButtonSaveCharSettings_Click(this, null);
-
-            this._myDataContext.PropertyChanged += this._myDataContext_PropertyChanged;
 
             LogInfo($"Using default microphone: \"{this.SpeechProcessor.DefaultMicrophone}\"");
             this.uiMicrophoneName.Content = this.SpeechProcessor.DefaultMicrophone;
@@ -290,7 +265,7 @@ namespace StarTrekNut.VoiceCom.UI
 
             this.HookContextEvents(true);
         }
-
+        
         private void CheckSoftwareVersionCallback(object nothing)
         {
             try
@@ -367,7 +342,7 @@ namespace StarTrekNut.VoiceCom.UI
 
         private void SpeechProc_SpeechRecognized(object sender, SpeechProcRecognitionEventArgs e)
         {
-            LogInfo($"Recognised: {e.RecognitionResultText}");
+            LogInfo(e.RecognitionResultText);
         }
 
         private void uiButTestTts_Click(object sender, RoutedEventArgs e)
@@ -399,7 +374,7 @@ namespace StarTrekNut.VoiceCom.UI
             profSettings.VoiceCommandList.Add(new VoiceCommand
                 {
                     Grammer = "foo",
-                    KeyStrokes = "bar"
+                    KeyStrokes = new System.Collections.Generic.List<System.Windows.Input.Key>() { System.Windows.Input.Key.Space }
                 });
 
             //Optionally copy the currently selected profile settings into the new characters profile
@@ -407,27 +382,20 @@ namespace StarTrekNut.VoiceCom.UI
                 if (this._myDataContext.SelectedProfileSettings != null)
                     profSettings.VoiceCommandList = this._myDataContext.SelectedProfileSettings.CloneVoiceCommands();
 
+            if (this.SpeechProcessor != null && this.SpeechProcessor.IsRecognizerRunning)
+                this.SpeechProcessor.IsRecognizerRunning = false;
+
             this._myDataContext.SelectedExecutable.ProfileSettingsList.Add(profSettings);
             this._myDataContext.SelectedProfileSettings = profSettings;
         }
-
-        private void uiButtonAddGrammerKey_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new KeystrokePicker();
-            dialog.ShowDialog();
-        }
-
+                
         private void uiButtonAddHotkey_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new HotKeyPicker();
             var diagResult = dialog.ShowDialog();
 
-            if (diagResult.HasValue && diagResult.Value && dialog.HotKey.Keys.Any())
-                this._myDataContext.SelectedUser.HotKeysList.Add(new HotKey { KeyList = dialog.HotKey.Keys });
-        }
-
-        private void uiButtonCancelCharSettings_Click(object sender, RoutedEventArgs e)
-        {
+            if (diagResult.HasValue && diagResult.Value)
+                this._myDataContext.SelectedUser.HotKeysList.Add(dialog.HotKey);
         }
 
         private void uiButtonClear_Click(object sender, RoutedEventArgs e)
@@ -451,6 +419,9 @@ namespace StarTrekNut.VoiceCom.UI
                     if (confirm == MessageBoxResult.No)
                         return;
 
+                    if (this.SpeechProcessor != null && this.SpeechProcessor.IsRecognizerRunning)
+                        this.SpeechProcessor.IsRecognizerRunning = false;
+
                     this._myDataContext.SelectedUser.ExecutableList.Remove(this._myDataContext.SelectedExecutable);
                 }
             }
@@ -458,7 +429,7 @@ namespace StarTrekNut.VoiceCom.UI
         
         private void uiButtonRemoveHotKey_Click(object sender, RoutedEventArgs e)
         {
-            if (this.uiGridHotKeys.SelectedItem is HotKey item)
+            if (this.uiGridHotKeys.SelectedItem is System.Windows.Input.Key item)
             {
                 var confirm = MessageBox.Show(
                     "This will remove your currently selected HotKey.  Are you sure you want to do this?",
@@ -484,6 +455,9 @@ namespace StarTrekNut.VoiceCom.UI
             if (confirm == MessageBoxResult.No)
                 return;
 
+            if (this.SpeechProcessor != null && this.SpeechProcessor.IsRecognizerRunning)
+                this.SpeechProcessor.IsRecognizerRunning = false;
+
             if (this._myDataContext.SelectedProfileSettings != null)
             {
                 this._myDataContext.SelectedExecutable.ProfileSettingsList.Remove(this._myDataContext.SelectedProfileSettings);
@@ -495,6 +469,9 @@ namespace StarTrekNut.VoiceCom.UI
         {
             try
             {
+                if (this.SpeechProcessor != null && this.SpeechProcessor.IsRecognizerRunning)
+                    this.SpeechProcessor.IsRecognizerRunning = false;
+
                 Properties.Settings.Default.Save();
                 this.SpeechProcessor?.SetUserProfileCommandGrammerKeyStrokes(this._myDataContext.SelectedProfileSettings?.VoiceCommandList?.ToList());
                 LogInfo("Profile and settings information has been saved.");
@@ -520,7 +497,6 @@ namespace StarTrekNut.VoiceCom.UI
                     {
                         ExecutableName = exePicker.SelectedProcessName
                     };
-                    KeyTranslation.DEFAULT_KEY_TRANSLATIONS.ForEach(tran => exeFound.KeyTranslations.Add(KeyTranslation.Clone(tran)));
 
                     this._myDataContext.SelectedUser.ExecutableList.Add(exeFound);
                 }
@@ -564,9 +540,7 @@ namespace StarTrekNut.VoiceCom.UI
             if (this.uiSliderTtsVolume == sender)
                 this._myDataContext.SelectedUser.StartupTtsSettings.SelectedVolume = (int)this.uiSliderTtsVolume.Value;
         }
-
-        #endregion
-
+                
         private void UiButtonAddVoiceCommand_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -576,8 +550,7 @@ namespace StarTrekNut.VoiceCom.UI
             {
                 var dialog = new VoiceCommandEditor(
                     EditorType.Add, 
-                    this._myDataContext.SelectedProfileSettings.VoiceCommandList, 
-                    this._myDataContext.SelectedExecutable.KeyTranslations);
+                    this._myDataContext.SelectedProfileSettings.VoiceCommandList);
 
                 dialog.VoiceCommand = new VoiceCommand();
                 dialog.Owner = this;
@@ -603,8 +576,7 @@ namespace StarTrekNut.VoiceCom.UI
 
                 var dialog = new VoiceCommandEditor(
                     EditorType.Edit, 
-                    this._myDataContext.SelectedProfileSettings.VoiceCommandList,
-                    this._myDataContext.SelectedExecutable.KeyTranslations);
+                    this._myDataContext.SelectedProfileSettings.VoiceCommandList);
 
                 dialog.VoiceCommand = voiceCommand;
                 dialog.Owner = this;
@@ -625,8 +597,7 @@ namespace StarTrekNut.VoiceCom.UI
 
                 var dialog = new VoiceCommandEditor(
                     EditorType.Copy, 
-                    this._myDataContext.SelectedProfileSettings.VoiceCommandList,
-                    this._myDataContext.SelectedExecutable.KeyTranslations);
+                    this._myDataContext.SelectedProfileSettings.VoiceCommandList);
 
                 dialog.VoiceCommand = new VoiceCommand()
                 {
@@ -669,70 +640,6 @@ namespace StarTrekNut.VoiceCom.UI
                 {
                     MessageBox.Show("You haven't selected a Voice Command from the grid.", "Command Removal", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-            }
-        }
-
-        private void UiButtonAddKeyTranslationCommand_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            if (button == null) return;
-
-            var dialog = new KeyTranslationEditor(
-                EditorType.Add,
-                this._myDataContext.SelectedExecutable.KeyTranslations);
-
-            dialog.KeyTranslation = new KeyTranslation() { Enabled = true };
-            dialog.Owner = this;
-
-            var diagResult = dialog.ShowDialog();
-
-            if (diagResult.HasValue && diagResult.Value)
-            {
-                this._myDataContext.SelectedExecutable.KeyTranslations.Add(dialog.KeyTranslation);
-            }
-        }
-
-        private void ButtonEditKeyTranslationCommand_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            if (button == null) return;
-
-            var keyTranslation = button.CommandParameter as KeyTranslation;
-            if (keyTranslation == null) return;
-
-            var dialog = new KeyTranslationEditor(
-                EditorType.Edit,
-                this._myDataContext.SelectedExecutable.KeyTranslations);
-
-            dialog.KeyTranslation = keyTranslation;
-            dialog.Owner = this;
-
-            var diagResult = dialog.ShowDialog();
-        }
-
-        private void ButtonDeleteKeyTranslationCommand_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            if (button == null) return;
-
-            var keyTranslation = button.CommandParameter as KeyTranslation;
-            if (keyTranslation != null)
-            {
-                var confirm = MessageBox.Show(
-                    "This will remove your Voice Command.  Are you sure you want to do this?",
-                    "Confirm Removal",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-
-                if (confirm == MessageBoxResult.No)
-                    return;
-
-                //this._myDataContext.SelectedProfileSettings.VoiceCommandList.Remove(voiceCommand);
-                this._myDataContext.SelectedExecutable.KeyTranslations.Remove(keyTranslation);
-            }
-            else
-            {
-                MessageBox.Show("You haven't selected a key translation from the grid.", "Command Removal", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -780,9 +687,9 @@ namespace StarTrekNut.VoiceCom.UI
                 {
                     tmpVoiceCommandSettings = StarTrekNut.VoiceCom.Lib.Helpers.VoiceCommandSettingsHelper.ReadFile(dialog.FileName);
                     if (tmpVoiceCommandSettings == null)
-                        throw new System.Exception("Failed to read file.");
+                        throw new Exception("Failed to read file.");
                 }
-                catch (System.Exception exception)
+                catch (Exception exception)
                 {
                     MessageBox.Show(
                         $"The import failed.\n\nReason \"{exception.Message}\"",
@@ -796,7 +703,7 @@ namespace StarTrekNut.VoiceCom.UI
                     try
                     {
                         this.Cleanup();
-                        Properties.Settings.Default.VoiceCommandSettings = tmpVoiceCommandSettings;
+                        Settings.Default.VoiceCommandSettings = tmpVoiceCommandSettings;
                         this.Init();
                     }
                     catch (System.Exception exception)
@@ -819,13 +726,12 @@ namespace StarTrekNut.VoiceCom.UI
         {
             var dialog = new System.Windows.Forms.SaveFileDialog();
             dialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-            //dialog.CheckFileExists = true;
 
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
                 {
-                    StarTrekNut.VoiceCom.Lib.Helpers.VoiceCommandSettingsHelper.WriteFile(dialog.FileName, this._myDataContext.VoiceComSettings);
+                    Lib.Helpers.VoiceCommandSettingsHelper.WriteFile(dialog.FileName, this._myDataContext.VoiceComSettings);
 
                     MessageBox.Show(
                         $"The export is complete.",
@@ -846,65 +752,11 @@ namespace StarTrekNut.VoiceCom.UI
             dialog.Dispose();
         }
 
-        private void UiButtonTranslationsRestore_Click(object sender, RoutedEventArgs e)
-        {
-            var confirm = MessageBox.Show(
-                    "This will reset your current applications key translations.  Are you sure you want to do this?",
-                    "Confirm Removal",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-
-            if (confirm == MessageBoxResult.No)
-                return;
-
-            this._myDataContext.SelectedExecutable.KeyTranslations.Clear();
-            KeyTranslation.DEFAULT_KEY_TRANSLATIONS.ForEach(tran => this._myDataContext.SelectedExecutable.KeyTranslations.Add(KeyTranslation.Clone(tran)));
-            //this._myDataContext.SelectedExecutable.KeyTranslations.AddRange(KeyTranslation.DEFAULT_KEY_TRANSLATIONS);
-        }
-
-        private void UiButtonTranslationsCopyFrom_Click(object sender, RoutedEventArgs e)
-        {
-            var selectedExe = uiComboTranslationsCopyFrom.SelectedItem as Executable;
-            if (selectedExe == null)
-            {
-                MessageBox.Show(
-                        "You haven't selected a Copy From application.",
-                        "Confirm Copy",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-
-                return;
-            }
-
-            if (selectedExe == this._myDataContext.SelectedExecutable)
-            {
-                MessageBox.Show(
-                        "You can only copy key translations from another application.",
-                        "Confirm Copy",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-
-                return;
-            }
-
-            var confirm = MessageBox.Show(
-                    "This will copy the key translations from the Copy From application to your Current Application.  Are you sure you want to do this?",
-                    "Confirm Copy",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-
-            if (confirm == MessageBoxResult.No)
-                return;
-
-            this._myDataContext.SelectedExecutable.KeyTranslations.Clear();
-            selectedExe.KeyTranslations.ToList().ForEach(tran => this._myDataContext.SelectedExecutable.KeyTranslations.Add(KeyTranslation.Clone(tran)));
-        }
-
         private void UiButtonHelp_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var processHandle = System.Diagnostics.Process.Start(StarTrekNut.VoiceCom.Lib.Helpers.WebVersionHelper._projectUrl);
+                var processHandle = System.Diagnostics.Process.Start(Lib.Helpers.WebVersionHelper._projectUrl);
                 processHandle.Dispose();
                 processHandle = null;
             }
@@ -918,21 +770,15 @@ namespace StarTrekNut.VoiceCom.UI
         
         private void LogInfo(string message)
         {
-            //if (this._myDataContext == null)
-            //    System.Diagnostics.EventLog.WriteEntry("VoiceCommInt", message, System.Diagnostics.EventLogEntryType.Information);
             if(this._myDataContext != null)
                 this._myDataContext.Logger.Info(message);
         }
 
         private void LogError(string message, Exception e = null)
         {
-            //if (this._myDataContext == null)
-            //    if (e == null)
-            //        System.Diagnostics.EventLog.WriteEntry("VoiceCommInt", message, System.Diagnostics.EventLogEntryType.Error);
-            //    else
-            //        System.Diagnostics.EventLog.WriteEntry("VoiceCommInt", $"{message}: {e}", System.Diagnostics.EventLogEntryType.Error);
             if(this._myDataContext != null)
                 this._myDataContext.Logger.Error(message, e);
         }
+        #endregion
     }
 }

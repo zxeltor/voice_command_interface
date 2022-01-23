@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:classes="clr-namespace:StarTrekNut.VoiceCom.UI.Classes"
         mc:Ignorable="d"
-        Title="Voice Command Interface" MinHeight="460" Height="460" MinWidth="1000" Width="1000" WindowStartupLocation="CenterScreen">
+        Title="Voice Command Interface" MinHeight="460" Height="504.655" MinWidth="1000" Width="1000" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <classes:EntryTypeColorConverter x:Key="EntryColorConverter" />
         <classes:TtsVoiceConverter x:Key="TtsVoiceConverter" />
@@ -53,7 +53,7 @@
         </DataTemplate>
         <DataTemplate x:Key="VoiceCommandColumnCellTemplate">
             <DockPanel>
-                <TextBlock Foreground="DarkBlue" HorizontalAlignment="Center">
+                <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=Grammer, Mode=OneWay}">
                     <TextBlock.Text>
                         <Binding Path="Grammer" Mode="OneWay" />
                     </TextBlock.Text>
@@ -62,21 +62,11 @@
         </DataTemplate>
         <DataTemplate x:Key="KeyStrokeColumnCellTemplate">
             <DockPanel>
-                <TextBlock Foreground="DarkBlue" HorizontalAlignment="Center">
+                <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=KeyStrokes, Mode=OneWay, Converter={StaticResource KeyConverter}}">
                     <TextBlock.Text>
-                        <Binding Path="VisualKeyStrokes" Mode="OneWay" />
+                        <Binding Path="KeyStrokes" Mode="OneWay" Converter="{StaticResource KeyConverter}" />
                     </TextBlock.Text>
                 </TextBlock>
-            </DockPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="KeyTranslationCommandColumnCellTemplate">
-            <DockPanel>
-                <Button ToolTip="Delete key translation" Width="20" Height="20" BorderThickness="0" Background="Transparent" Click="ButtonDeleteKeyTranslationCommand_Click" CommandParameter="{Binding}">
-                    <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
-                </Button>
-                <Button ToolTip="Edit key translation" Margin="20,0,0,0" Width="20" Height="20" BorderThickness="0" Background="Transparent" Click="ButtonEditKeyTranslationCommand_Click" CommandParameter="{Binding}">
-                    <Image Source="Icons/glyphicons-151-edit.png" Width="20" Height="20"/>
-                </Button>
             </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="CommandColumnCellTemplate">
@@ -89,6 +79,13 @@
                 </Button>
                 <Button Tag="EditVoiceCommand" ToolTip="Edit voice command" Margin="20,0,0,0" Width="20" Height="20" BorderThickness="0" Background="Transparent" Click="ButtonEditVoiceCommand_Click" CommandParameter="{Binding}">
                     <Image Source="Icons/glyphicons-151-edit.png" Width="20" Height="20"/>
+                </Button>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DeleteColumnCellTemplate">
+            <DockPanel>
+                <Button Tag="DeleteHotKeyCommand" ToolTip="Delete Pause Key" Width="20" Height="20" BorderThickness="0" Background="Transparent" Click="uiButtonRemoveHotKey_Click" CommandParameter="{Binding}">
+                    <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
                 </Button>
             </DockPanel>
         </DataTemplate>
@@ -105,8 +102,6 @@
                 <ColumnDefinition Width="20*"/>
             </Grid.ColumnDefinitions>
             <StatusBar Grid.Row="1" Grid.Column="0" Width="Auto" FlowDirection="LeftToRight">
-                <!--<Label Name="uiLabelUserName" Width="Auto" Height="Auto" Content="{Binding Path=SelectedUser.UserName}"/>
-                <Separator/>-->
                 <Label Name="uiLabelExeName" Content="{Binding Path=SelectedUser.StartupExecutableName}" Width="Auto" Height="Auto"/>
                 <Label Name="uiLabelaExeStatus" Content="Not Running" Foreground="Blue" Width="80" Height="Auto"/>
                 <Separator/>
@@ -146,18 +141,20 @@
                     <Grid Background="#FFE5E5E5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="2*"/>
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0" FlowDirection="RightToLeft"  Height="Auto" Margin="0,0,0,0" VerticalAlignment="Top" Orientation="Horizontal">
-                            <Button x:Name="uiButtonClear" Content="Clear"  VerticalAlignment="Center" Width="75" Click="uiButtonClear_Click"/>
-                        </StackPanel>
-
-                        <DataGrid x:Name="uiDataGridLog" Grid.Row="1" Margin="0,0,0,0" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" AutoGenerateColumns="False">
+                        <DataGrid x:Name="uiDataGridLog" Margin="0,0,0,0" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Type" MinWidth="80" IsReadOnly="True" Binding="{Binding Path=EntryType}"/>
                                 <DataGridTextColumn Header="Time" MinWidth="100" IsReadOnly="True" Binding="{Binding Path=EntryDateTime}"/>
                                 <DataGridTextColumn Header="Message" MinWidth="700" IsReadOnly="True" Binding="{Binding Path=EntryMessage}"/>
+                                <DataGridTemplateColumn MinWidth="40" IsReadOnly="False">
+                                    <DataGridTemplateColumn.Header>
+                                        <Button Tag="ClearLogs" Name="uiButtonClearLog" ToolTip="Clear log entries." BorderThickness="0" Background="Transparent" Click="uiButtonClear_Click">
+                                            <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
+                                        </Button>
+                                    </DataGridTemplateColumn.Header>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -168,14 +165,6 @@
                             <ColumnDefinition Width="419*"/>
                             <ColumnDefinition Width="280"/>
                         </Grid.ColumnDefinitions>
-                        <!--<DataGrid x:Name="uiDataGridCharacterSettings" ItemsSource="{Binding Path=SelectedProfileSettings.VoiceCommandList, Mode=TwoWay}" AutoGenerateColumns="False" 
-                                  Margin="10,41,10,226" SelectionMode="Single">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Voice Command" Binding="{Binding Path=Grammer, Mode=TwoWay}" MinWidth="200"/>
-                                <DataGridTextColumn Header="Key Stroke(s)" Binding="{Binding Path=KeyStrokes, Mode=TwoWay}" MinWidth="200" />
-                            </DataGrid.Columns>
-                        </DataGrid>-->
-
                         <Label Grid.Column="1" x:Name="label" Content="Application:" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="77"/>
                         <ComboBox Name="uiComboBoxApplication" Grid.Column="1" Margin="87,14,10,0" VerticalAlignment="Top" Height="26"
                                   ItemsSource="{Binding Path=SelectedUser.ExecutableList, Mode=OneWay}"
@@ -211,16 +200,13 @@
                             </Grid>
                         </GroupBox>
                         <Button x:Name="uiButtonRemoveSelectedChar" IsEnabled="False" Click="uiButtonRemoveSelectedChar_Click" Content="Remove Profile" Grid.Column="1" Margin="0,132,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Height="26"/>
-                        <!--<Button x:Name="uiButtonAddGrammerKey" Click="uiButtonAddGrammerKey_Click" Content="Add" Height="26" Margin="0,10,90,0" VerticalAlignment="Top" RenderTransformOrigin="1.306,0.5" HorizontalAlignment="Right" Width="62"/>-->
-                        <!--<Button x:Name="uiButtonRemoveGrammerKey" Click="uiButtonRemoveGrammerKey_Click" Content="Remove Command" Height="26" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="116"/>
-                        <Button x:Name="uiButtonAddGrammerKey" IsEnabled="False" Content="Add Command" Height="26" Margin="0,10,146,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="116"/>-->
                         <ListView Name="uiListViewVoiceCommands" IsEnabled="False" Margin="10"
                                   ItemsSource="{Binding Path=SelectedProfileSettings.VoiceCommandList, Mode=TwoWay}">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Enabled" Width="64" CellTemplate="{StaticResource EnableColumnCellTemplate}" />
-                                    <GridViewColumn Header="Voice Command" Width="300" CellTemplate="{StaticResource VoiceCommandColumnCellTemplate}" />
-                                    <GridViewColumn Header="Key Stroke(s)" Width="180" CellTemplate="{StaticResource KeyStrokeColumnCellTemplate}" />
+                                    <GridViewColumn Header="Voice Command" Width="200" CellTemplate="{StaticResource VoiceCommandColumnCellTemplate}" />
+                                    <GridViewColumn Header="Keystrokes" Width="260" CellTemplate="{StaticResource KeyStrokeColumnCellTemplate}" />
                                     <GridViewColumn Width="120" CellTemplate="{StaticResource CommandColumnCellTemplate}">
                                         <GridViewColumn.HeaderTemplate>
                                             <DataTemplate>
@@ -233,306 +219,102 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                        <!--<Button x:Name="uiButtonSaveCharSettings" IsEnabled="False" Click="uiButtonSaveCharSettings_Click" Content="Apply Changes" Grid.Column="1" Margin="10,0,0,10" Height="26" VerticalAlignment="Bottom"
-                                ToolTip="Save all character profile changes to disk." HorizontalAlignment="Left" Width="112" />
-                        <Button x:Name="uiButtonCancelCharSettings" IsEnabled="False"  Click="uiButtonCancelCharSettings_Click" Content="Cancel Changes" Grid.Column="1" Margin="0,0,10,10" HorizontalAlignment="Right" Width="112" Height="26" VerticalAlignment="Bottom"
-                                ToolTip="Cancel character profile changes to disk." />-->
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Key Translations" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="Auto">
-                    <Grid Background="#FFE5E5E5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="192*"/>
-                            <ColumnDefinition Width="124*"/>
-                            <ColumnDefinition Width="177*"/>
-                        </Grid.ColumnDefinitions>
-                        <ListView IsEnabled="True" Margin="10"
-                                  ItemsSource="{Binding Path=SelectedExecutable.KeyTranslations, Mode=TwoWay}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Enabled" Width="60" CellTemplate="{StaticResource EnableColumnCellTemplate}" />
-                                    <GridViewColumn Header="Key" Width="80" CellTemplate="{StaticResource KeyCellTemplate}" />
-                                    <GridViewColumn Header="Translation" Width="100" CellTemplate="{StaticResource TranslationCellTemplate}" />
-                                    <GridViewColumn Width="80" CellTemplate="{StaticResource KeyTranslationCommandColumnCellTemplate}" >
-                                        <GridViewColumn.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Button ToolTip="Add new key translation" BorderThickness="0" Background="Transparent" Click="UiButtonAddKeyTranslationCommand_Click">
-                                                    <Image Source="Icons/glyphicons-191-plus-sign.png" Width="20" Height="20"/>
-                                                </Button>
-                                            </DataTemplate>
-                                        </GridViewColumn.HeaderTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                        <Label Content="Help:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"
-                            ToolTip="Select the installed operating system voice for command acknowledgement." Grid.Column="2" Height="26" />
-                        <RichTextBox Grid.Column="2" Margin="10,41,10,10" IsReadOnly="True" VerticalScrollBarVisibility="Auto">
-                            <FlowDocument>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="What are key translations?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="Key translations are necessary for translating certain keyboard keys before they're sent to a windows application via the Voice Command Interface. It's not likely you'll ever need to modify these."/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="What does the Copy Translations button do?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="You can copy key translations from one application to another.  Clicking on the Copy button will take the key translations from the application selected in the Copy From dropdown, into the Current Application."/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="What does the Restore Defaults button do?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="Clicking the Restore Defaults button will clear, then update the key translations of the Current Application with a new default set. "/>
-                                </Paragraph>
-                            </FlowDocument>
-                        </RichTextBox>
-                        <Label Content="Current Application:" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="118"/>
-                        <Label Name="uiLabelTranslationsCurrentExe" Content="{Binding Path=SelectedExecutable.ExecutableName, Mode=OneWay}" BorderThickness="1" Grid.Column="1" Height="26" Margin="10,36,10,0" VerticalAlignment="Top" BorderBrush="Black" Background="#00000000"/>
-                        <GroupBox Grid.Column="1" Header="Copy Translations" Height="93" Margin="10.2,74,10.6,0" VerticalAlignment="Top">
-                            <Grid>
-                                <Label Content="Copy From:" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="77"/>
-                                <ComboBox Name="uiComboTranslationsCopyFrom" Margin="10,41,0,0" VerticalAlignment="Top" Height="26"
-                                  ItemsSource="{Binding SelectedUser.ExecutableList, Mode=OneWay}" />
-                                <Button x:Name="uiButtonTranslationsCopyFrom" Content="Copy" Margin="0,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="84" Height="26"
-                                    ToolTip="Copy key translations from another application."
-                                    Click="UiButtonTranslationsCopyFrom_Click" />
-                            </Grid>
-                        </GroupBox>
-                        <Button Name="uiButtonTranslationsRestore"  Content="Restore Defaults" Grid.Column="1" 
-                                Margin="0,185,10.6,0" VerticalAlignment="Top" Height="26"
-                                ToolTip="Restore defaults for the Current Application."
-                                Click="UiButtonTranslationsRestore_Click" HorizontalAlignment="Right" Width="109" />
-                    </Grid>
-
-                </TabItem>
-                <TabItem Name="uiTabItemSettings" Header="Recognition">
-                    <Grid Background="#FFE5E5E5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="304*"/>
-                            <ColumnDefinition Width="667*"/>
-                        </Grid.ColumnDefinitions>
-                        <!--<Label x:Name="label" Content="Select Application:" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="181"/>-->
-
-                        <GroupBox Header="Microphone" Margin="10,10,9.6,0" Height="52" VerticalAlignment="Top" Grid.Column="0">
-                            <Grid>
-                                <Label Name="uiMicrophoneName" Content="Microphone" Margin="10,0,10.4,0" VerticalAlignment="Top" />
-                            </Grid>
-                        </GroupBox>
-
-                        <GroupBox Header="Voice Command Acknowledgement" Margin="10,120,9.6,0" Height="198" VerticalAlignment="Top" Grid.Column="0">
-                            <Grid>
-                                <CheckBox Name="uiCheckboxEnableCommandAcknowledgement" Content="Enable" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="Auto" Margin="10,10,0,0"
-                                    IsChecked="{Binding Path=SelectedUser.StartupTtsSettings.EnableTtsCommandAck, Mode=TwoWay}"
-                                    ToolTip="This enables an audible acknowledgement for each recognized voice command to this application." />
-                                <Button Name="uiButTestTts" Margin="0,10,10,0" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Width="58" Click="uiButTestTts_Click">Test</Button>
-                                <Label Content="Operating System Voice:" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="142"
-                                    ToolTip="Select the installed operating system voice for command acknowledgement." />
-                                <ComboBox Name="uiComboBoxTtsVoices"
-                                          ItemsSource="{Binding Path=SpeechProcessor.TtsVoices, Mode=OneWay, Converter={StaticResource TtsVoiceConverter}}"
-                                          SelectedItem="{Binding Path=SelectedUser.StartupTtsSettings.SelectedVoice, Mode=OneWay, Converter={StaticResource TtsVoiceConverter}}" Margin="10,70,10,0" VerticalAlignment="Top"
-                                          SelectionChanged="uiComboBoxTtsVoices_SelectionChanged"/>
-
-                                <Label Content="Volume:" HorizontalAlignment="Left" Margin="15,106,0,0" VerticalAlignment="Top" Height="26"/>
-                                <Slider Name="uiSliderTtsVolume" Margin="10,132,10,0" VerticalAlignment="Top" Value="{Binding Path=SelectedUser.StartupTtsSettings.SelectedVolume, Mode=TwoWay}" Minimum="0" Maximum="100" 
-                                        SmallChange="1" LargeChange="10" TickPlacement="Both" TickFrequency="10" ValueChanged="uiSliderTtsVolume_ValueChanged" />
-                                <TextBlock Margin="73,111,0,0" TextWrapping="Wrap" Text="{Binding Path=SelectedUser.StartupTtsSettings.SelectedVolume, Mode=OneWay}" VerticalAlignment="Top" RenderTransformOrigin="1.615,0.564" HorizontalAlignment="Left" Width="35"/>
-
-                            </Grid>
-                        </GroupBox>
-                        <RichTextBox Grid.Column="1" Margin="10,41,10,10" IsReadOnly="True" VerticalScrollBarVisibility="Auto">
-                            <FlowDocument>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="What Voice Recognition Engine should I select?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="Most people only have the default speech recognition engine provided by Windows. In the rare case you have another one available, you have the option here to select it for use."/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="Note: "/>
-                                    </Bold>
-                                    <Run Text="Only the default Windows 10 speech recognition engine was tested with this application."/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="Speech recognition isn't always recognizing my voice commands?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="It's recommended you take the time to train the selected speech recognition engine.  If you're using the one provided by Windows, go into Windows (control panel -&gt; Speech Recognition), then select 'Train your computer to better understand you' and complete the wizard. "/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="Why do voice commands occasionally trigger when I don't want them too?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="Audio feedback can trigger voice commands. If you're not using a headset with a mic, or you have something else playing in the background, this can happen."/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="What is Voice Command Acknowledgement?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="When Voice Command Acknowledgement is enabled, the application sends an audio announcement using text to speech to let you know a voice command was triggered.  You have the options to pick which operating system voice it uses, along with a separate volume setting.  If you choose to disable it, you can still see command acknowledgements in the log tab. "/>
-                                </Paragraph>
-                            </FlowDocument>
-                        </RichTextBox>
-                        <Label Content="Voice Recognition Engine:" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="150"
-                            ToolTip="Select the installed operating system voice for command acknowledgement." Grid.Column="0" Height="26" />
-
-                        <ComboBox x:Name="uiComboBoxRecognitionEngines" 
-                            ItemsSource="{Binding Path=SpeechProcessor.RecogEngines, Converter={StaticResource RecogConverter}, Mode=OneWay}"
-                            SelectedItem="{Binding Path=SpeechProcessor.SelectedRecognizer, Converter={StaticResource RecogConverter}, Mode=TwoWay}" SelectionChanged="uiComboBoxRecognitionEngines_SelectionChanged" Margin="10,93,9.6,0" VerticalAlignment="Top" Grid.Column="0" Height="22"/>
-                        <!--<GroupBox Header="Hotkeys" Margin="10">
-                            <Grid>
-                                <CheckBox IsEnabled="False" IsChecked="True" Name="uiCheckboxEnableHotkeys" Content="Enable" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="Auto" Margin="10,10,0,0"
-                                    ToolTip="This enables an audabile annoucement for each recognized voice command to this application." />
-                                <Button IsEnabled="True" x:Name="uiButtonAddHotkey" Content="Add" Height="26" Margin="0,4,60,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="50" Click="uiButtonAddHotkey_Click"/>
-                                <Button IsEnabled="True" x:Name="uiButtonRemoveHotKey" Content="Remove" Height="26" Margin="0,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="50" Click="uiButtonRemoveHotKey_Click"/>
-                                <DataGrid Name="uiGridHotKeys" Margin="0,35,0,0" IsReadOnly="True" ItemsSource="{Binding Path=SelectedUser.HotKeysList, Mode=OneWay}" 
-                                          AutoGenerateColumns="False" SelectionMode="Single">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Key" Binding="{Binding Path=Keys, Mode=OneWay}" MinWidth="200"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </GroupBox>-->
-                        <Label Content="Help:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"
-                            ToolTip="Select the installed operating system voice for command acknowledgement." Grid.Column="2" Height="26" />
-
-                        <!--<GroupBox Grid.Column="1" Header="Import / Export" Margin="10,282,10,10">
-                            <Grid >
-                                <Button Name="uiButtonImport" Content="Import Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="106" Height="26" Click="UiButtonImport_Click"
-                                        ToolTip="Import profile and application settings from an XML file." />
-                                <Button Name="uiButtonExport" Content="Export Settings" Margin="0,10,10,0" Click="UiButtonExport_Click"
-                                        ToolTip="Export profile and application settings to an XML file." Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="106" />
-                            </Grid>
-                        </GroupBox>-->
                     </Grid>
                 </TabItem>
                 <TabItem Header="Options" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="Auto">
                     <Grid Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="141*"/>
-                            <ColumnDefinition Width="352*"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="200*"/>
                         </Grid.ColumnDefinitions>
-                        <GroupBox Header="Hotkeys" Margin="10,10,10.4,0" Height="197" VerticalAlignment="Top">
+
+                        <GroupBox Grid.Column="0" Header="Recognition Settings" Margin="10,0,0,10">
                             <Grid>
-                                <CheckBox Visibility="Hidden" IsEnabled="False" IsChecked="True" Name="uiCheckboxEnableHotkeys" Content="Enable" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="Auto" Margin="10,10,0,0"
-                                    ToolTip="This enables an audabile annoucement for each recognized voice command to this application." />
-                                <Button IsEnabled="True" x:Name="uiButtonAddHotkey" Content="Add" Height="26" Margin="0,4,60,0" 
-                                        ToolTip="Add a Hotkey"
-                                        VerticalAlignment="Top" HorizontalAlignment="Right" Width="50" Click="uiButtonAddHotkey_Click"/>
-                                <Button IsEnabled="True" x:Name="uiButtonRemoveHotKey" Content="Remove" Height="26" Margin="0,4,0,0" 
-                                        ToolTip="Delete a Hotkey"
-                                        VerticalAlignment="Top" HorizontalAlignment="Right" Width="50" Click="uiButtonRemoveHotKey_Click"/>
-                                <DataGrid Name="uiGridHotKeys" Margin="0,35,0,0" IsReadOnly="True" ItemsSource="{Binding Path=SelectedUser.HotKeysList, Mode=OneWay}" 
+                                <Label Content="Voice Recognition Engine:" HorizontalAlignment="Left" Margin="10,1,0,0" VerticalAlignment="Top" Width="150"
+                                    ToolTip="Select the installed operating system voice for command acknowledgement." Height="26" />
+                                <ComboBox x:Name="uiComboBoxRecognitionEngines" 
+                                    ItemsSource="{Binding SpeechProcessor.RecogEngines, Converter={StaticResource RecogConverter}, Mode=OneWay}"
+                                    SelectedItem="{Binding SpeechProcessor.SelectedRecognizer, Converter={StaticResource RecogConverter}, Mode=TwoWay}" SelectionChanged="uiComboBoxRecognitionEngines_SelectionChanged" 
+                                    Margin="10,27,9.714,0" VerticalAlignment="Top" Height="22"/>
+
+                                <GroupBox Header="Pause Keys" Margin="10,54,10,0" Height="112" VerticalAlignment="Top">
+                                    <Grid>
+                                        <CheckBox Visibility="Hidden" IsEnabled="False" IsChecked="True" Name="uiCheckboxEnableHotkeys" Content="Enable" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="Auto" Margin="10,10,0,0"
+                                            ToolTip="This enables an audabile annoucement for each recognized voice command to this application." />
+                                        <DataGrid Name="uiGridHotKeys" Margin="0,0,0.286,0" IsReadOnly="True" ItemsSource="{Binding Path=SelectedUser.HotKeysList, Mode=OneWay}" 
                                           AutoGenerateColumns="False" SelectionMode="Single">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Key" Binding="{Binding Path=Keys, Mode=OneWay}" MinWidth="200"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Key" Binding="{Binding Mode=OneWay, Converter={StaticResource KeyConverter}}" MinWidth="170"/>
+                                                <DataGridTemplateColumn CellTemplate="{StaticResource DeleteColumnCellTemplate}" >
+                                                    <DataGridTemplateColumn.Header>
+                                                        <Button Tag="AddHotKey" Name="uiButtonAddVoiceCommand" ToolTip="Add Pause Key" BorderThickness="0" Background="Transparent" Click="uiButtonAddHotkey_Click">
+                                                            <Image Source="Icons/glyphicons-191-plus-sign.png" Width="20" Height="20"/>
+                                                        </Button>
+                                                    </DataGridTemplateColumn.Header>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+                                </GroupBox>
+                                
+                                <GroupBox Header="Voice Command Acknowledgement" Margin="10,171,10,0" Height="193" VerticalAlignment="Top">
+                                    <Grid>
+                                        <CheckBox x:Name="uiCheckboxEnableCommandAcknowledgement" Content="Enable" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" 
+                                                  Width="Auto" Margin="10,10,0,0" IsChecked="{Binding SelectedUser.StartupTtsSettings.EnableTtsCommandAck, Mode=TwoWay}"
+                                    ToolTip="This enables an audible acknowledgement for each recognized voice command to this application." />
+                                        <Button x:Name="uiButTestTts" Margin="0,10,10,0" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Width="58" Click="uiButTestTts_Click" Content="Test"/>
+                                        <Label Content="Operating System Voice:" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="142"
+                                    ToolTip="Select the installed operating system voice for command acknowledgement." />
+                                        <ComboBox x:Name="uiComboBoxTtsVoices"
+                                    ItemsSource="{Binding SpeechProcessor.TtsVoices, Converter={StaticResource TtsVoiceConverter}, Mode=OneWay}"
+                                    SelectedItem="{Binding SelectedUser.StartupTtsSettings.SelectedVoice, Converter={StaticResource TtsVoiceConverter}, Mode=OneWay}" Margin="10,70,10,0" VerticalAlignment="Top"
+                                    SelectionChanged="uiComboBoxTtsVoices_SelectionChanged"/>
+
+                                        <Label Content="Volume:" HorizontalAlignment="Left" Margin="15,106,0,0" VerticalAlignment="Top" Height="26"/>
+                                        <Slider x:Name="uiSliderTtsVolume" Margin="10,132,10,0" VerticalAlignment="Top" Value="{Binding SelectedUser.StartupTtsSettings.SelectedVolume, Mode=TwoWay}" Minimum="0" Maximum="100" 
+                                    SmallChange="1" LargeChange="10" TickPlacement="Both" TickFrequency="10" ValueChanged="uiSliderTtsVolume_ValueChanged" />
+                                        <TextBlock Margin="73,111,0,0" TextWrapping="Wrap" Text="{Binding SelectedUser.StartupTtsSettings.SelectedVolume, Mode=OneWay}" VerticalAlignment="Top" RenderTransformOrigin="1.615,0.564" HorizontalAlignment="Left" Width="35"/>
+
+                                    </Grid>
+                                </GroupBox>
+
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Import / Export" Margin="10,211,10.4,0" Height="70" VerticalAlignment="Top">
-                            <Grid >
-                                <Button Name="uiButtonImport" Content="Import Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="106" Height="26" Click="UiButtonImport_Click"
+
+                        <GroupBox Grid.Column="1" Header="Misc Settings" Margin="10,0,0,10">
+                            <Grid>
+                                <GroupBox Header="Microphone" Margin="10,1,10,0" Height="52" VerticalAlignment="Top">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="6*"/>
+                                            <ColumnDefinition Width="23*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label x:Name="uiMicrophoneName" Content="Microphone" Margin="0,0,-0.142,0" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                                    </Grid>
+                                </GroupBox>
+                                
+                                <GroupBox Header="Keystroke Settings" Height="100" Margin="10,57,9.714,0" VerticalAlignment="Top">
+                                    <Grid>
+                                        <Label Content="Delay (milliseconds):" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26"/>
+                                        <TextBlock Margin="128,15,24.714,0" TextWrapping="Wrap" Text="{Binding Path=SelectedUser.SelectedKeystrokeDelayInMilliSeconds, Mode=OneWay}" VerticalAlignment="Top" RenderTransformOrigin="-0.257,2.143"/>
+                                        <Slider x:Name="uiSliderKeyStrokeDelay" Margin="10,41,9.714,0" VerticalAlignment="Top" Value="{Binding SelectedUser.SelectedKeystrokeDelayInMilliSeconds, Mode=TwoWay}" Minimum="100" Maximum="2000" 
+                                            SmallChange="1" LargeChange="50" TickPlacement="Both" TickFrequency="50" ValueChanged="uiSliderTtsVolume_ValueChanged" />
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Header="Import / Export Application Settings" Margin="11,162,9.714,0" Height="70" VerticalAlignment="Top">
+                                    <Grid >
+                                        <Button Name="uiButtonImport" Content="Import Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="106" Height="26" Click="UiButtonImport_Click"
                                         ToolTip="Import application settings from an XML file." />
-                                <Button Name="uiButtonExport" Content="Export Settings" Margin="0,10,10,0" Click="UiButtonExport_Click"
+                                        <Button Name="uiButtonExport" Content="Export Settings" Margin="0,10,10,0" Click="UiButtonExport_Click"
                                         ToolTip="Export application settings to an XML file." Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="106" />
+                                    </Grid>
+                                </GroupBox>
+                                <CheckBox x:Name="uiCheckboxEnableSoftwareUpdateChecks" Content="Software Update Check" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="Auto" 
+                                    Margin="11,237,0,0" IsChecked="{Binding SelectedUser.EnableSoftwareUpdates, Mode=TwoWay}"
+                                    ToolTip="Enables/Disables software update checks." />
                             </Grid>
                         </GroupBox>
-                        <Label Content="Help:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"
-                            ToolTip="Select the installed operating system voice for command acknowledgement." Grid.Column="1" Height="26" />
-                        <RichTextBox Grid.Column="1" Margin="10,41,10,10" IsReadOnly="True" VerticalScrollBarVisibility="Auto">
-                            <FlowDocument>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="What are Hotkeys?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="Hotkeys are used to temporarily disable the triggering of voice commands while a key is pressed. Example would be a push-to-talk key which is configured for use with another application."/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="Why do settings changes disable speech recognition, and force me to save my changes?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="Some changes made in the interface require voice commands to be re-sent to the speech recognition engine.  It's best to allow the user to make bulk changes and force them to manually save changes afterwards, rather then hammering the speech recognition engine with changes with every keystroke."/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="Why have an Import / Export feature?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="This feature allows you to create an xml file backup of your application settings.  You could also use this feature to share your settings with another user of the application. "/>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Bold>
-                                        <Run Text="Q: " />
-                                    </Bold>
-                                    <Run Text="Why Software Update Checks?"/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="A: " />
-                                    </Bold>
-                                    <Run Text="If enabled, the application checks to see if a newer version is available for download 10 seconds after the application launches."/>
-                                    <LineBreak/>
-                                    <Bold>
-                                        <Run Text="Note: " />
-                                    </Bold>
-                                    <Run Text="This does not trigger an automated download or update of the software. A download icon displays in the bottom right of the status bar letting you know a newer version is available. It's up to you to manually download and install the newer version of the application."/>
-                                </Paragraph>
-                            </FlowDocument>
-                        </RichTextBox>
-                        <CheckBox x:Name="uiCheckboxEnableSoftwareUpdateChecks" Content="Software Update Check" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="Auto" Margin="10,296,0,0"
-                            IsChecked="{Binding SelectedUser.EnableSoftwareUpdates, Mode=TwoWay}"
-                            ToolTip="Enables/Disables software update checks." />
                     </Grid>
                 </TabItem>
             </TabControl>

@@ -1,16 +1,18 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 {
+    /// <summary>
+    ///     Class used to save settings, and for databinding in the app.
+    /// </summary>
     public class VoiceCommand : INotifyPropertyChanged
     {
         #region Fields
 
         private string _grammer;
 
-        private string _keyStrokes;
-
-        private string _visualKeyStrokes;
+        private List<System.Windows.Input.Key> _keyStrokes = new List<System.Windows.Input.Key>();
 
         private bool _enabled = true;
 
@@ -34,23 +36,13 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
             }
         }
 
-        public string KeyStrokes
+        public List<System.Windows.Input.Key> KeyStrokes
         {
             get => this._keyStrokes;
             set
             {
                 this._keyStrokes = value;
                 this.NotifyPropertyChange("KeyStrokes");
-            }
-        }
-
-        public string VisualKeyStrokes
-        {
-            get => this._visualKeyStrokes;
-            set
-            {
-                this._visualKeyStrokes = value;
-                this.NotifyPropertyChange("SendKeyStrokes");
             }
         }
 

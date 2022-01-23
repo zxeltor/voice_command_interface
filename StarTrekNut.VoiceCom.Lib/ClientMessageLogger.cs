@@ -16,11 +16,7 @@ namespace StarTrekNut.VoiceCom.Lib
         private static ClientMessageLogger _instance;
 
         #endregion
-
-        #region Fields
-
-        #endregion
-
+        
         #region Constructors and Destructors
 
         private ClientMessageLogger()
@@ -76,11 +72,6 @@ namespace StarTrekNut.VoiceCom.Lib
         /// <param name="exception">An exception is one is available.</param>
         public void Error(string message, Exception exception = null)
         {
-            //if (exception == null)
-            //    System.Diagnostics.EventLog.WriteEntry("VoiceCommInt", message, System.Diagnostics.EventLogEntryType.Error);
-            //else
-            //    System.Diagnostics.EventLog.WriteEntry("VoiceCommInt", $"{message}: {exception}", System.Diagnostics.EventLogEntryType.Error);
-
             this.AddLogEntry(new LogEntry { EntryType = LogEntryType.Error, EntryDateTime = DateTime.Now, EntryMessage = message });
         }
 
@@ -91,8 +82,6 @@ namespace StarTrekNut.VoiceCom.Lib
         /// <param name="exception">An exception is one is available.</param>
         public void Info(string message)
         {
-            //System.Diagnostics.EventLog.WriteEntry("VoiceCommInt", message, System.Diagnostics.EventLogEntryType.Information);
-
             this.AddLogEntry(new LogEntry { EntryType = LogEntryType.Info, EntryDateTime = DateTime.Now, EntryMessage = message });
         }
 
@@ -103,11 +92,6 @@ namespace StarTrekNut.VoiceCom.Lib
         /// <param name="exception">An exception is one is available.</param>
         public void Warning(string message, Exception exception = null)
         {
-            //if (exception == null)
-            //    _log4NetLogger.Warn(message);
-            //else
-            //    _log4NetLogger.Warn(message, exception);
-
             this.AddLogEntry(new LogEntry { EntryType = LogEntryType.Warning, EntryDateTime = DateTime.Now, EntryMessage = message });
         }
 

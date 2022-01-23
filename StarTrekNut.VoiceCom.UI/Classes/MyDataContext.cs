@@ -168,14 +168,12 @@ namespace StarTrekNut.VoiceCom.UI.Classes
 
         public void AttachUserPropertyEvents()
         {
-            this.VoiceComSettings.PropertyChanged += this.VoiceComSettingsPropertyChanged;
             this.VoiceComSettings.UserList.ForEach(
                 user =>
                     {
                         user.PropertyChanged += this.UserPropertyChanged;
                         user.StartupTtsSettings.PropertyChanged += this.StartupTtsSettingsPropertyChanged;
-                        user.StartupSpeechRecogSettings.PropertyChanged += this.StartupSpeechRecogSettings_PropertyChanged;
-                        user.HotKeysList.CollectionChanged += this.HotKeysListCollectionChanged;   //.ToList().ForEach(hotkey => hotkey.PropertyChanged += this.Hotkey_PropertyChanged);
+                        user.HotKeysList.CollectionChanged += this.HotKeysListCollectionChanged;
                         user.ExecutableList.ToList().ForEach(
                             exe =>
                                 {
@@ -183,58 +181,29 @@ namespace StarTrekNut.VoiceCom.UI.Classes
                                     exe.ProfileSettingsList.ToList().ForEach(
                                         prof =>
                                             {
-                                                prof.PropertyChanged += this.Prof_PropertyChanged;
                                                 prof.VoiceCommandList.CollectionChanged += this.VoiceCommandListCollectionChanged;
                                                 prof.VoiceCommandList.ToList().ForEach(com => com.PropertyChanged += this.VoiceCommandPropertyChanged);
                                             });
-                                    exe.KeyTranslations.CollectionChanged += KeyTranslations_CollectionChanged;
-                                    exe.KeyTranslations.ToList().ForEach(tran => tran.PropertyChanged += Tran_PropertyChanged);
                                 });
                     });
         }
 
-        private void Tran_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            this.HasProfileChanges = true;
-        }
-
-        private void KeyTranslations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var newItems = e.NewItems;
-            if (newItems != null)
-                foreach (var keyTranslation in newItems)
-                {
-                    ((KeyTranslation)keyTranslation).PropertyChanged += this.Tran_PropertyChanged;
-                }
-
-            var oldItems = e.OldItems;
-            if (oldItems != null)
-                foreach (var keyTranslation in oldItems)
-                {
-                    ((KeyTranslation)keyTranslation).PropertyChanged -= this.Tran_PropertyChanged;
-                }
-
-            this.HasProfileChanges = true;
-        }
-
         private void HotKeysListCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if(sender is ObservableCollection<HotKey> collection)
+            if(sender is ObservableCollection<System.Windows.Input.Key> collection)
             {
-                this.SpeechProcessor?.SetHotKeys(collection.Where(hk => hk.GetKey().HasValue).Select(hk => hk.GetKey().Value).ToList());
+                this.SpeechProcessor?.SetHotKeys(collection.ToList());
             }
         }
 
         public void DetachUserPropertyEvents()
         {
-            this.VoiceComSettings.PropertyChanged -= this.VoiceComSettingsPropertyChanged;
             this.VoiceComSettings.UserList.ForEach(
                 user =>
                     {
                         user.PropertyChanged -= this.UserPropertyChanged;
                         user.StartupTtsSettings.PropertyChanged -= this.StartupTtsSettingsPropertyChanged;
-                        user.StartupSpeechRecogSettings.PropertyChanged -= this.StartupSpeechRecogSettings_PropertyChanged;
-                        user.HotKeysList.CollectionChanged -= this.HotKeysListCollectionChanged;   //.ToList().ForEach(hotkey => hotkey.PropertyChanged -= this.Hotkey_PropertyChanged);
+                        user.HotKeysList.CollectionChanged -= this.HotKeysListCollectionChanged;
                         user.ExecutableList.ToList().ForEach(
                             exe =>
                                 {
@@ -242,12 +211,9 @@ namespace StarTrekNut.VoiceCom.UI.Classes
                                     exe.ProfileSettingsList.ToList().ForEach(
                                         prof =>
                                             {
-                                                prof.PropertyChanged -= this.Prof_PropertyChanged;
                                                 prof.VoiceCommandList.CollectionChanged -= this.VoiceCommandListCollectionChanged;
                                                 prof.VoiceCommandList.ToList().ForEach(com => com.PropertyChanged -= this.VoiceCommandPropertyChanged);
                                             });
-                                    exe.KeyTranslations.CollectionChanged -= KeyTranslations_CollectionChanged;
-                                    exe.KeyTranslations.ToList().ForEach(tran => tran.PropertyChanged -= Tran_PropertyChanged);
                                 });
                     });
         }
@@ -327,14 +293,6 @@ namespace StarTrekNut.VoiceCom.UI.Classes
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void Prof_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-        }
-
-        private void StartupSpeechRecogSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-        }
-
         private void StartupTtsSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -365,6 +323,9 @@ namespace StarTrekNut.VoiceCom.UI.Classes
                 case "StartupExecutableName":
                     this.SpeechProcessor.RunningProcessName = this.SelectedUser.StartupExecutableName;
                     break;
+                case "SelectedKeystrokeDelayInMilliSeconds":
+                    this.SpeechProcessor.KeyStrokeDelayInMilliSeconds = this.SelectedUser.SelectedKeystrokeDelayInMilliSeconds;
+                    break;
             }
         }
 
@@ -391,11 +352,6 @@ namespace StarTrekNut.VoiceCom.UI.Classes
 
             this.HasProfileChanges = true;
         }
-
-        private void VoiceComSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-        }
-
         #endregion
     }
 }

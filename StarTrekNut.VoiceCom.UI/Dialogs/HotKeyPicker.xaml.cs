@@ -13,8 +13,6 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
     {
         #region Fields
 
-        private readonly List<Key> _controlKeysList = new List<Key>();
-
         private bool _isInEditMode;
 
         #endregion
@@ -30,7 +28,7 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
 
         #region Public Properties
 
-        public HotKeyInfo HotKey { get; set; }
+        public Key HotKey { get; set; }
 
         #endregion
 
@@ -41,20 +39,18 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             if (enable)
             {
                 this.uiButRecord.Foreground = new SolidColorBrush(Colors.Red);
-                this.uiButRecord.Content = "Recording ...";
+                this.uiButRecord.Content = "Recording";
                 this.uiButRecord.FontWeight = FontWeights.Bold;
                 this.uiTextBlockRecord.Foreground = new SolidColorBrush(Colors.Red);
                 this.uiButRecord.KeyDown += this.uiTextBlockRecord_KeyDown;
                 this.uiButRecord.KeyUp += this.uiTextBlockRecord_KeyUp;
                 this.uiTextBlockRecord.KeyDown += this.uiTextBlockRecord_KeyDown;
                 this.uiTextBlockRecord.KeyUp += this.uiTextBlockRecord_KeyUp;
-
-                this._controlKeysList.Clear();
             }
             else
             {
                 this.uiButRecord.Foreground = new SolidColorBrush(Colors.Black);
-                this.uiButRecord.Content = "Record Keybind";
+                this.uiButRecord.Content = "Record";
                 this.uiButRecord.FontWeight = FontWeights.Normal;
                 this.uiTextBlockRecord.Foreground = new SolidColorBrush(Colors.Black);
                 this.uiButRecord.KeyDown -= this.uiTextBlockRecord_KeyDown;
@@ -66,8 +62,6 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
 
         private void uiButApply_Click(object sender, RoutedEventArgs e)
         {
-            this.HotKey = new HotKeyInfo { Keys = this._controlKeysList ?? new List<Key>() };
-
             this.DialogResult = true;
         }
 
@@ -84,26 +78,31 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
 
         private void uiTextBlockRecord_KeyDown(object sender, KeyEventArgs e)
         {
-            if (this._controlKeysList.Any())
-            {
-                var lastKey = this._controlKeysList.Last();
-                if (lastKey == e.Key)
-                    return;
-            }
+            //if (this._hotKeysList.Any())
+            //{
+            //    var lastKey = this._hotKeysList.Last();
+            //    if (lastKey == e.Key)
+            //        return;
+            //}
 
-            this._controlKeysList.Add(e.Key);
+            //this._hotKeysList.Add(e.Key);
 
-            var result = string.Empty;
+            //var result = string.Empty;
 
-            for (var intI = 0; intI < this._controlKeysList.Count; intI++)
-            {
-                if (intI < this._controlKeysList.Count - 1)
-                    result = result + this._controlKeysList[intI] + "+";
-                else
-                    result = result + this._controlKeysList[intI];
-            }
+            //for (var intI = 0; intI < this._hotKeysList.Count; intI++)
+            //{
+            //    if (intI < this._hotKeysList.Count - 1)
+            //        result = result + this._hotKeysList[intI] + "+";
+            //    else
+            //        result = result + this._hotKeysList[intI];
+            //}
 
-            this.uiTextBlockRecord.Text = result;
+            if (e.Key == Key.System)
+                this.HotKey = e.SystemKey;
+            else
+                this.HotKey = e.Key;
+
+            this.uiTextBlockRecord.Text = e.Key.ToString();
         }
 
         private void uiTextBlockRecord_KeyUp(object sender, KeyEventArgs e)
@@ -114,40 +113,40 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
         #endregion
     }
 
-    public class HotKeyInfo
-    {
-        #region Constructors and Destructors
+    //public class HotKeyInfo
+    //{
+    //    #region Constructors and Destructors
 
-        public HotKeyInfo()
-        {
-            this.Keys = new List<Key>();
-        }
+    //    public HotKeyInfo()
+    //    {
+    //        this.Keys = new List<Key>();
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Public Properties
+    //    #region Public Properties
 
-        public List<Key> Keys { get; set; }
+    //    public List<Key> Keys { get; set; }
 
-        #endregion
+    //    #endregion
 
-        #region Public Methods and Operators
+    //    #region Public Methods and Operators
 
-        public override string ToString()
-        {
-            var result = string.Empty;
+    //    public override string ToString()
+    //    {
+    //        var result = string.Empty;
 
-            for (var intI = 0; intI < this.Keys.Count; intI++)
-            {
-                if (intI < this.Keys.Count - 1)
-                    result = result + this.Keys[intI] + "+";
-                else
-                    result = result + this.Keys[intI];
-            }
+    //        for (var intI = 0; intI < this.Keys.Count; intI++)
+    //        {
+    //            if (intI < this.Keys.Count - 1)
+    //                result = result + this.Keys[intI] + "+";
+    //            else
+    //                result = result + this.Keys[intI];
+    //        }
 
-            return result;
-        }
+    //        return result;
+    //    }
 
-        #endregion
-    }
+    //    #endregion
+    //}
 }

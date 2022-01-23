@@ -103,15 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Dialogs\KeyTranslationEditor.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Dialogs\VoiceCommandEditor.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\KeystrokePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -139,14 +131,8 @@
     <Compile Include="Classes\MyDataContext.cs" />
     <Compile Include="Classes\RecognizerInfoConverter.cs" />
     <Compile Include="Classes\TtsVoiceConverter.cs" />
-    <Compile Include="Dialogs\KeyTranslationEditor.xaml.cs">
-      <DependentUpon>KeyTranslationEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\VoiceCommandEditor.xaml.cs">
       <DependentUpon>VoiceCommandEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\KeystrokePicker.xaml.cs">
-      <DependentUpon>KeystrokePicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\HotKeyPicker.xaml.cs">
       <DependentUpon>HotKeyPicker.xaml</DependentUpon>
@@ -204,20 +190,10 @@
     <EmbeddedResource Include="microphone-icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="VoiceComSettings_orig.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\StarTrekNut.VoiceCom.Lib\StarTrekNut.VoiceCom.Lib.csproj">
       <Project>{0e7eca95-3aa7-4cab-be76-9d8714fc7e80}</Project>
       <Name>StarTrekNut.VoiceCom.Lib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="VoiceComSettings_2.0.0.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\glyphicons-195-question-sign.png" />

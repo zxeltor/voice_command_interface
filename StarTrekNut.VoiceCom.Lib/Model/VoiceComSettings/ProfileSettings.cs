@@ -57,7 +57,7 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 
         public ObservableCollection<VoiceCommand> CloneVoiceCommands()
         {
-            var clonedList = this.VoiceCommandList.Select(vc => new VoiceCommand { Grammer = vc.Grammer, KeyStrokes = vc.KeyStrokes });
+            var clonedList = this.VoiceCommandList.Select(vc => new VoiceCommand {Enabled = vc.Enabled,  Grammer = vc.Grammer, KeyStrokes = vc.KeyStrokes });
             return new ObservableCollection<VoiceCommand>(clonedList);
         }
 
