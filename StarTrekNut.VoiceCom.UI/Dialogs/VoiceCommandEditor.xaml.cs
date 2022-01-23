@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using StarTrekNut.VoiceCom.Lib.Classes;
+using StarTrekNut.VoiceCom.Lib.Helpers;
 using StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings;
 using System.Collections.ObjectModel;
 
@@ -16,22 +17,19 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
     {
         private bool _isInEditMode;
         private ObservableCollection<VoiceCommand> _voiceCommandList;
-        private ObservableCollection<KeyTranslation> _keyTranslations;
         private EditorType _editorType;
-        private string _visualKeyStrokes;
+        private List<Key> _keyStrokes = new List<Key>();
 
         #region Constructors and Destructors
 
         public VoiceCommandEditor(
             EditorType editorType, 
-            ObservableCollection<VoiceCommand> voiceCommandList,
-            ObservableCollection<KeyTranslation> keyTranslations
+            ObservableCollection<VoiceCommand> voiceCommandList
             )
         {
             this.InitializeComponent();
             this._editorType = editorType;
             this._voiceCommandList = voiceCommandList;
-            this._keyTranslations = keyTranslations;
         }
 
         #endregion
@@ -48,7 +46,8 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             {
                 this._voiceCommand = value;
                 this.uiTextBoxGrammer.Text = value.Grammer;
-                this.uiTextBoxKeyStrokes.Text = value.KeyStrokes;
+                this.uiTextBoxKeyStrokes.Text = KeyTranslationHelper.GetVisualKeyString(value.KeyStrokes); //value.KeyStrokesString;
+                this._keyStrokes = value.KeyStrokes;
             }
         }
         #endregion
@@ -70,7 +69,7 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             }
             if (string.IsNullOrWhiteSpace(uiTextBoxKeyStrokes.Text))
             {
-                MessageBox.Show("You can save a voice command with now keystroke(s), but it won't do anything.", "Voice Command Interface: Application Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("You can save a voice command with no keystroke(s), but it won't do anything.", "Voice Command Interface: Application Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             if(this._editorType == EditorType.Add || this._editorType == EditorType.Copy)
@@ -95,9 +94,8 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             }
 
             this.VoiceCommand.Grammer = string.IsNullOrWhiteSpace(uiTextBoxGrammer.Text) ? string.Empty : uiTextBoxGrammer.Text;
-            this.VoiceCommand.KeyStrokes = string.IsNullOrWhiteSpace(uiTextBoxKeyStrokes.Text) ? string.Empty : uiTextBoxKeyStrokes.Text;
-            this.VoiceCommand.VisualKeyStrokes = string.IsNullOrWhiteSpace(_visualKeyStrokes) ? string.Empty : _visualKeyStrokes;
-
+            this.VoiceCommand.KeyStrokes = _keyStrokes;
+            
             this.DialogResult = true;
         }
 
@@ -111,16 +109,21 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             if (enable)
             {
                 this.uiButRecord.Foreground = new SolidColorBrush(Colors.Red);
-                this.uiButRecord.Content = "Recording ...";
+                this.uiButRecord.Content = "Recording";
+                this.uiButRecord.ToolTip = "Click to STOP recording keystrokes.";
                 this.uiButRecord.FontWeight = FontWeights.Bold;
                 this.uiTextBoxKeyStrokes.Foreground = new SolidColorBrush(Colors.Red);
                 this.uiButRecord.PreviewKeyDown += this.uiTextBlockRecord_KeyDown;
                 this.uiTextBoxKeyStrokes.PreviewKeyDown += this.uiTextBlockRecord_KeyDown;
+
+                this.uiTextBoxKeyStrokes.Text = string.Empty;
+                this._keyStrokes.Clear();
             }
             else
             {
                 this.uiButRecord.Foreground = new SolidColorBrush(Colors.Black);
-                this.uiButRecord.Content = "Record Keybind";
+                this.uiButRecord.Content = "Record";
+                this.uiButRecord.ToolTip = "Click to START recording keystrokes.";
                 this.uiButRecord.FontWeight = FontWeights.Normal;
                 this.uiTextBoxKeyStrokes.Foreground = new SolidColorBrush(Colors.Black);
                 this.uiButRecord.PreviewKeyDown -= this.uiTextBlockRecord_KeyDown;
@@ -134,33 +137,47 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             this.ToggleRecordOp(this._isInEditMode);
         }
 
+        //bool LeftAltKeyPressed = false;
+        //bool RightAltKeyPressed = false;
         private void uiTextBlockRecord_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            if(e.IsRepeat)
             {
+                e.Handled = true;
                 return;
             }
-            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            else if(e.Key == Key.LeftShift || e.Key == Key.RightShift || e.Key == Key.LeftCtrl || 
+                e.Key == Key.RightCtrl || e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
             {
+                this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.Key.ToString() : $"+{e.Key}";
+                this._keyStrokes.Add(e.Key);
+
+                e.Handled = true;
                 return;
             }
-            if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
+            else if(e.Key == Key.System)
             {
+                this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.SystemKey.ToString() : $"+{e.SystemKey}";
+                this._keyStrokes.Add(e.SystemKey);
+
+                e.Handled = true;
                 return;
             }
 
-            KeyTranslation.GetSendKeysString(e.Key, _keyTranslations);
+            this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.Key.ToString() : $"+{e.Key}";
+            this._keyStrokes.Add(e.Key);
 
-            this.uiTextBoxKeyStrokes.Text = KeyTranslation.GetSendKeysString(e.Key, _keyTranslations);
-            this._visualKeyStrokes = KeyTranslation.GetVisualKeyString(e.Key);
-
-            this.uiButRecord_Click(sender, e);
+            e.Handled = true;
         }
         #endregion
 
-        private void RichTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void uiButClearKeyStrokes_Click(object sender, RoutedEventArgs e)
         {
+            this._isInEditMode = false;
+            this.ToggleRecordOp(this._isInEditMode);
 
+            this.uiTextBoxKeyStrokes.Text = string.Empty;
+            this._keyStrokes.Clear();
         }
     }
 

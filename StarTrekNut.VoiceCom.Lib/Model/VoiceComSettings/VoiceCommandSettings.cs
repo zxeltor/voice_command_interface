@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Xml.Serialization;
-using System.Windows.Input;
 
 namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 {

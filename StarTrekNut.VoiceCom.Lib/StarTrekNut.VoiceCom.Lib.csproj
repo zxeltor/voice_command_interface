@@ -91,8 +91,7 @@
     <Compile Include="Helpers\WebVersionHelper.cs" />
     <Compile Include="Model\LogEntry.cs" />
     <Compile Include="Model\VoiceComSettings\Executable.cs" />
-    <Compile Include="Model\VoiceComSettings\HotKey.cs" />
-    <Compile Include="Model\VoiceComSettings\KeyTranslation.cs" />
+    <Compile Include="Helpers\KeyTranslationHelper.cs" />
     <Compile Include="Model\VoiceComSettings\ProfileSettings.cs" />
     <Compile Include="Model\VoiceComSettings\SpeechRecogSettings.cs" />
     <Compile Include="Model\VoiceComSettings\TtsSettings.cs" />

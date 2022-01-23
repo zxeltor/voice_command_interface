@@ -5,39 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StarTrekNut.VoiceCom.UI.Dialogs"
         mc:Ignorable="d"
-        Title="HotKey Picker" Height="292.578" Width="534.069" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
+        Title="Recognition Pause Key Picker" Height="292.578" Width="251.26" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
     <Grid Background="#FFE5E5E5">
         <Grid.RowDefinitions>
             <RowDefinition Height="20*" />
             <RowDefinition Height="20*" />
-            <RowDefinition Height="20*" />
-            <RowDefinition Height="20*" />
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="30*" />
             <RowDefinition Height="20*" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
-        </Grid.ColumnDefinitions>
+
         <Button Name="uiButApply" Grid.RowSpan="5" Content="Apply" Margin="0,0,103,10" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom" Click="uiButApply_Click" Grid.Column="1"/>
         <Button Name="uiButCancel" Grid.RowSpan="5" Content="Cancel" Margin="0,0,10,10" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="uiButCancel_Click" Grid.Column="1"/>
-        <RichTextBox Margin="10,10,10,10.6" IsReadOnly="True" Grid.RowSpan="5">
+        <RichTextBox Margin="10,10,7.714,79" IsReadOnly="True" Grid.RowSpan="4">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text="Info:"/>
+                    <Bold>
+                        <Run Text="Info: "/>
+                    </Bold>
+                    <Run Text="Recognition Pause Keys are used to pause speech recognition temporarily with a key press."/>
                 </Paragraph>
                 <Paragraph>
-                    <Run Text="HotKeys are used to pause speech recognition."/>
-                </Paragraph>
-                <Paragraph>
-                    <Run Text="Example usage:"/>
-                </Paragraph>
-                <Paragraph>
-                    <Run Text="Disable speech recognition for a key you're using as a push-to-talk trigger in another application."/>
+                    <Bold>
+                        <Run Text="Example usage: "/>
+                    </Bold>
+                    <Run Text="Disable speech recognition temporarily while you have a push-to-talk button pressed."/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBox IsReadOnly="True" Name="uiTextBlockRecord" Grid.Column="1" Grid.Row="1" Margin="10" TextWrapping="Wrap" TextAlignment="Center" 
-                 VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100"/>
-        <Button Name="uiButRecord" Grid.Column="1" Grid.Row="2" Content="Record Keybind" Margin="10" Click="uiButRecord_Click" />
+        <TextBox IsReadOnly="True" Name="uiTextBlockRecord" Grid.Row="3" Margin="10,36.429,115.714,23" TextWrapping="Wrap" TextAlignment="Center" 
+                 VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100" Width="120" Height="20"/>
+        <Button Name="uiButRecord" Grid.Row="3" Content="Record" Margin="135,10.429,9.714,10" Click="uiButRecord_Click" />
+        <Label Content="Pause Key" HorizontalAlignment="Left" Margin="10,10.429,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="0.277,0.299"/>
     </Grid>
 </Window>

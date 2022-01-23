@@ -16,7 +16,7 @@ VCI isn't an exploitation tool for World of Warcraft, or any other windows appli
 
 Have fun and enjoy this application.
 
-__Note:__ I would love for VCI to work with Star Trek Online, but no luck so far. Most of my testing has been done with World of Warcraft. In theory, this should work with MOST windows applications which launch from an actual window. This won't work with console applications.
+__Note:__ Most of my testing has been done with World of Warcraft and Star Trek Online. In theory, this should work with MOST windows applications which launch from an actual window. This won't work with console applications.
 ## Details
 I originally created this application to interact with World of Warcraft. I was having trouble completing the Guardian Druid mage tower challenge in the Burning Legion expansion. I was used to playing with the standard WOW interface, and a certain set of hotkeys tied to my keyboard and mouse. The Guardian Druid mage tower challenge required me to use more abilities than I could setup with my hotkeys. So ... in comes the Voice Command Interface. It gave me the opportunity to bark out voice commands tied to some of my less commonly used abilities. 
 ## Requirements
@@ -55,19 +55,15 @@ Each targeted application can have multiple voice recognition profiles. When thi
 __Note:__ I thought this would come in handy when trying to support multiple characters in WOW, along with their multiple specs. 
 - __Create Profile__ -
 Used to create a new voice recognition profile for the currently selected Application. 
-### Key Translations Tab 
-![KeyTab](ScreenShots/KeyTranslationTab.png?v17-10-2021) 
-This tab maintains a map of windows keyboard keys which require translation, so they'll be recognized by the targeted windows application. A separate map of these keys is saved for each target application. New applications are given a default list, which can be modified. 
-__Note:__ It's not likely you'll need to change these keys. 
-### Recognition Tab 
-![RecogTab](ScreenShots/RecognitionTab.png?v17-10-2021) 
-This tab can be used to change various windows defaults. 
+### Options Tab 
+![RecogTab](ScreenShots/OptionsTab.png?v17-10-2021) 
+This tab can be used to change various settings for the app. 
 #### Settings: 
-- __Microphone__ -
-The application uses the windows default microphone. As a convenience it's displayed here. 
 - __Voice Recognition Engine__ -
 By default, the application uses the default recognition engine available to windows. If for some reason you have another option, you can give it a try. 
 __Note:__ This has only been tested with the following recognition engine "Microsoft Speech Recognizer 8.0 for Windows (English - US)". I can't guarantee it will work with others. 
+- __Pause Keys__ -
+Pause Keys are used to temporarily suppress speech recognition. For example, if you have discord open and a push-to-talk key set, you can add your push-to-talk key to the Pause Keys list. This will pause speech recognition until you’re done talking to your teammates.
 - __Voice Command Acknowledgement: Enable__ - 
 When a voice command is recognized and processed, the application can play a TTS (Text-to-speech) acknowledgement to the user. You can enable/disable this feature. 
 - __Voice Command Acknowledgement: Test__ - 
@@ -76,11 +72,10 @@ Use this to test your Voice Command Acknowledgement settings.
 Use can choose any windows installed voice to be used with Voice Command Acknowledgement. 
 - __Voice Command Acknowledgement: Volume__ -
 You can set the volume level for Voice Command Acknowledgement. 
-### Options Tab 
-![OptionsTab](ScreenShots/OptionsTab.png?v17-10-2021)  
-#### Settings: 
-- __Hotkeys__ -
-Hotkeys are used to suppress speech recognition. For example, if you have discord open and a push-to-talk key set, you can add your push-to-talk key to the Hotkeys list. This will pause speech recognition until you’re done talking to your teammates. 
+- __Microphone__ -
+The application uses the windows default microphone. As a convenience it's displayed here. 
+- __Keystroke Settings__ -
+When sending multiple keystrokes to the target application, it’s necessary to have a short delay between keystrokes. Slower computers may require a longer delay.
 - __Import / Export__ -
 You can use this feature to save/export your application settings to a XML file as a backup. 
 - __Software Update Check__ -

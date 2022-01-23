@@ -10,7 +10,7 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
     {
         #region Fields
 
-        private List<Key> _keyList;
+        private Key _key;
 
         #endregion
 
@@ -22,52 +22,45 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 
         #region Public Properties
 
-        public List<Key> KeyList
-        {
-            get => this._keyList;
-            set
-            {
-                this._keyList = value;
-                this.NotifyPropertyChange("KeyList");
-            }
-        }
+        //public List<Key> KeyList
+        //{
+        //    get => this._keyList;
+        //    set
+        //    {
+        //        this._keyList = value;
+        //        this.NotifyPropertyChange("KeyList");
+        //    }
+        //}
 
-        [XmlIgnore]
-        public string Keys
-        {
-            get
-            {
-                var result = string.Empty;
+        //[XmlIgnore]
+        //public string Keys
+        //{
+        //    get
+        //    {
+        //        var result = string.Empty;
 
-                for (var intI = 0; intI < this.KeyList.Count; intI++)
-                {
-                    if (intI < this.KeyList.Count - 1)
-                        result = result + this.KeyList[intI] + "+";
-                    else
-                        result = result + this.KeyList[intI];
-                }
+        //        for (var intI = 0; intI < this.KeyList.Count; intI++)
+        //        {
+        //            if (intI < this.KeyList.Count - 1)
+        //                result = result + this.KeyList[intI] + "+";
+        //            else
+        //                result = result + this.KeyList[intI];
+        //        }
 
-                return result;
-            }
-        }
-
-        #endregion
-
-        #region Properties
-
-        private string _Keys { get; set; }
-
+        //        return result;
+        //    }
+        //}
         #endregion
 
         #region Public Methods and Operators
 
-        public Key? GetKey()
-        {
-            if (this.KeyList != null && this.KeyList.Any())
-                return this.KeyList.FirstOrDefault();
+        //public Key? GetKey()
+        //{
+        //    if (this.KeyList != null && this.KeyList.Any())
+        //        return this.KeyList.FirstOrDefault();
 
-            return null;
-        }
+        //    return null;
+        //}
 
         #endregion
 

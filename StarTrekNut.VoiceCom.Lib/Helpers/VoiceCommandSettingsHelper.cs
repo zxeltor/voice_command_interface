@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings;
+﻿using StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings;
 
 namespace StarTrekNut.VoiceCom.Lib.Helpers
 {

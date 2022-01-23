@@ -1,10 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 {
+    /// <summary>
+    ///     Class used to save settings, and for databinding in the app.
+    /// </summary>
     public class Executable : INotifyPropertyChanged
     {
         #region Fields
@@ -12,8 +13,6 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
         private string _executableName;
 
         private ObservableCollection<ProfileSettings> _profileSettingsList;
-
-        private ObservableCollection<KeyTranslation> _keyTranslations;
 
         private string _startupProfileName;
 
@@ -24,7 +23,6 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
         public Executable()
         {
             this.ProfileSettingsList = new ObservableCollection<ProfileSettings>();
-            this.KeyTranslations = new ObservableCollection<KeyTranslation>();
         }
 
         #endregion
@@ -66,17 +64,6 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
                 this.NotifyPropertyChange("StartupProfileName");
             }
         }
-
-        public ObservableCollection<KeyTranslation> KeyTranslations
-        {
-            get => this._keyTranslations;
-            set
-            {
-                this._keyTranslations = value;
-                this.NotifyPropertyChange("KeyTranslations");
-            }
-        }
-
         #endregion
 
         #region Public Methods and Operators

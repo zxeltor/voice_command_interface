@@ -22,14 +22,12 @@ namespace StarTrekNut.VoiceCom.Lib
     {
         #region Static Fields
 
-        //private static SpeechProcessor _instance;
-
         /// <summary>
         ///     The voice command used to enable voice commands
         /// </summary>
-        private static readonly VoiceCommand _commandResume = new VoiceCommand { Grammer = "enable voice commands", KeyStrokes = "enabling voice commands." };
+        private static readonly VoiceCommand _commandResume = new VoiceCommand { Grammer = "enable voice commands", KeyStrokes = new List<Key>() };  //"enabling voice commands." };
 
-        private static readonly VoiceCommand _commandDisable = new VoiceCommand { Enabled = true, Grammer = "disable voice commands", KeyStrokes = "disable voice commands." };
+        private static readonly VoiceCommand _commandDisable = new VoiceCommand { Enabled = true, Grammer = "disable speach recognition", KeyStrokes = new List<Key>() }; //"disable voice commands." };
 
         #endregion
 
@@ -103,6 +101,15 @@ namespace StarTrekNut.VoiceCom.Lib
         /// </summary>
         private int _ttsVolume = 20;
 
+        /// <summary>
+        ///     The delay used between keystrokes when more then one keystroke is sent
+        ///     to the target application.
+        /// </summary>
+        private int _keystrokesDelayInMilliSeconds = 150;
+
+        /// <summary>
+        ///     The name of the default microphone used by the app
+        /// </summary>
         public string DefaultMicrophone { get; private set; }
 
         #endregion
@@ -141,12 +148,6 @@ namespace StarTrekNut.VoiceCom.Lib
         /// </summary>
         public static List<RecognizerInfo> RecogEngines => SpeechRecognitionEngine.InstalledRecognizers().ToList();
 
-        /// <summary>
-        ///     Get the singleton instance of this class
-        /// </summary>
-        /// <summary>
-        ///     Get and Set a list of character/profile voice commands
-        /// </summary>
         /// <summary>
         ///     Get and Set. Boolean used to determine if the application should send Text-to-Speech verification messages
         ///     to the user when a voice command is detected or other application level event occurs.
@@ -240,10 +241,10 @@ namespace StarTrekNut.VoiceCom.Lib
             }
         }
 
-        /// <summary>
-        ///     Get and Set. Boolean used to determine if the speech recognition engine is paused do to a Hotkey being pressed.
-        /// </summary>
-        public bool SpeachRecogIsPaused => this._speachRecogIsPaused;
+        ///// <summary>
+        /////     Get and Set. Boolean used to determine if the speech recognition engine is paused do to a Hotkey being pressed.
+        ///// </summary>
+        //public bool SpeachRecogIsPaused => this._speachRecogIsPaused;
 
         /// <summary>
         ///     Get and Private Set. A list of available Text-to-Speech voice from the Windows Operating System
@@ -268,6 +269,19 @@ namespace StarTrekNut.VoiceCom.Lib
             {
                 this._ttsVolume = value;
                 this.NotifyPropertyChange("TtsVolume");
+            }
+        }
+
+        /// <summary>
+        ///     Get and Set. The delay between keystrokes in MilliSeconds
+        /// </summary>
+        public int KeyStrokeDelayInMilliSeconds
+        {
+            get => this._keystrokesDelayInMilliSeconds;
+            set
+            {
+                this._keystrokesDelayInMilliSeconds = value;
+                this.NotifyPropertyChange("KeyStrokeDelayInMilliSeconds");
             }
         }
 
@@ -311,25 +325,7 @@ namespace StarTrekNut.VoiceCom.Lib
             this._ttsEngine.Volume = this.TtsVolume;
             this._ttsEngine.SpeakAsync("Welcome from the voice command interface.");
         }
-
-        /// <summary>
-        ///     Set the default Text-to-Speech voice.
-        /// </summary>
-        /// <param name="defVoice">The name of the default voice</param>
-        public void SetDefaultTtsVoice(string defVoice)
-        {
-            if (!string.IsNullOrWhiteSpace(defVoice))
-            {
-                var defaultTtsVoice = this.TtsVoices.FirstOrDefault(voice => voice.VoiceInfo.Name.ToLower().Contains(defVoice.ToLower()));
-                if (defaultTtsVoice != null)
-                {
-                    this._selectedTtsVoice = defaultTtsVoice;
-                    this.ResetTtsVoice();
-                    this.NotifyPropertyChange("SelectedTtsVoice");
-                }
-            }
-        }
-
+        
         /// <summary>
         ///     Used to set the voice command interrupt Hotkeys
         /// </summary>
@@ -517,8 +513,6 @@ namespace StarTrekNut.VoiceCom.Lib
             var gramerKeystroke = this._profileCommands?.FirstOrDefault(key => key.Grammer.Equals(e.Result.Text));
             if (gramerKeystroke == null)
                 return;
-            if (string.IsNullOrWhiteSpace(gramerKeystroke.KeyStrokes))
-                return;
 
             if (this.RunningProcess == null)
             {
@@ -537,14 +531,39 @@ namespace StarTrekNut.VoiceCom.Lib
             else if (this.RunningProcess == null)
             {
                 this.SendTtsAcknowledge("Command received but application is not running");
+                this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=AppNotRunning"));
+            }
+            else if (gramerKeystroke.KeyStrokes == null || !gramerKeystroke.KeyStrokes.Any())
+            {
+                // If there's any trouble sending the key, then let's log it.
+                this.SendTtsAcknowledge("Command received but no key strokes defined.");
+                this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=NoKeyStrokes"));
             }
             else
             {
-                ProcessHelpers.SendKeysToApplication(gramerKeystroke.KeyStrokes, this.RunningProcess);
-                this.SendTtsAcknowledge(e.Result.Text);
+                try
+                {
+                    if (ProcessHelpers.SendKeysToApplication(gramerKeystroke.KeyStrokes, this.RunningProcess, this.KeyStrokeDelayInMilliSeconds))
+                    {
+                        // We're no longer sending the processed grammer for this command back as an
+                        // ack. It was occasionally triggering a false recognition event.
+                        this.SendTtsAcknowledge("Command processed");
+                        this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=Completed"));
+                    }
+                    else
+                    {
+                        // If there's any trouble sending the key, then let's log it.
+                        this.SendTtsAcknowledge("Command received but not processed");
+                        this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=Failed"));
+                    }
+                }
+                catch(System.Exception exception)
+                {
+                    // If there's any trouble sending the key, then let's log it.
+                    this.SendTtsAcknowledge("Command received but not processed");
+                    this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=Failed Reason=\"{exception.Message}\""));
+                }
             }
-
-            this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs(e.Result.Text));
         }
 
         /// <summary>

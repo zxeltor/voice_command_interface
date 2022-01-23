@@ -3,13 +3,16 @@ using System.ComponentModel;
 
 namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 {
+    /// <summary>
+    ///     Class used to save settings, and for databinding in the app.
+    /// </summary>
     public class User : INotifyPropertyChanged
     {
         #region Fields
 
         private ObservableCollection<Executable> _executableList;
 
-        private ObservableCollection<HotKey> _hotKeysList;
+        private ObservableCollection<System.Windows.Input.Key> _hotKeysList;
 
         private string _startupExecutableName;
 
@@ -17,9 +20,9 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
 
         private TtsSettings _startupTtsSettings;
 
-        private string _userName;
-
         private bool _enableSoftwareUpdates;
+
+        private int _keystrokeDelayInMilliSeconds = 150;
 
         #endregion
 
@@ -29,7 +32,7 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
         {
             this.StartupTtsSettings = new TtsSettings();
             this.StartupSpeechRecogSettings = new SpeechRecogSettings();
-            this.HotKeysList = new ObservableCollection<HotKey>();
+            this.HotKeysList = new ObservableCollection<System.Windows.Input.Key>();
             this.ExecutableList = new ObservableCollection<Executable>();
         }
 
@@ -53,7 +56,7 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
             }
         }
 
-        public ObservableCollection<HotKey> HotKeysList
+        public ObservableCollection<System.Windows.Input.Key> HotKeysList
         {
             get => this._hotKeysList;
             set
@@ -83,6 +86,16 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
             }
         }
 
+        public int SelectedKeystrokeDelayInMilliSeconds
+        {
+            get => this._keystrokeDelayInMilliSeconds;
+            set
+            {
+                this._keystrokeDelayInMilliSeconds = value;
+                this.NotifyPropertyChange("SelectedKeystrokeDelayInMilliSeconds");
+            }
+        }
+
         public TtsSettings StartupTtsSettings
         {
             get => this._startupTtsSettings;
@@ -90,16 +103,6 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
             {
                 this._startupTtsSettings = value;
                 this.NotifyPropertyChange("StartupTtsSettings");
-            }
-        }
-
-        public string UserName
-        {
-            get => this._userName;
-            set
-            {
-                this._userName = value;
-                this.NotifyPropertyChange("UserName");
             }
         }
 
