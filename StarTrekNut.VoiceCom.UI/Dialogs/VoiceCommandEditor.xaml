@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StarTrekNut.VoiceCom.UI.Dialogs"
+        xmlns:classes="clr-namespace:StarTrekNut.VoiceCom.UI.Classes"
         mc:Ignorable="d"
         Title="Voice Command Editor" Height="309.039" Width="648.034" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+    <Window.Resources>
+        <classes:KeyConverter x:Key="KeyConverter" />
+    </Window.Resources>
     <Grid Background="#FFE5E5E5">
         <Grid.RowDefinitions>
             <RowDefinition Height="50*" />
@@ -13,7 +17,11 @@
             <RowDefinition Height="34*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <RichTextBox Grid.Row="0" Margin="10,10,10,11" IsReadOnly="True" VerticalScrollBarVisibility="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*" />
+            <ColumnDefinition Width="50*" />
+        </Grid.ColumnDefinitions>
+        <RichTextBox Grid.Row="0" Grid.Column="1" Margin="10,10,10,11" IsReadOnly="True" VerticalScrollBarVisibility="Auto">
             <FlowDocument>
                 <Paragraph>
                     <Bold>
@@ -32,13 +40,27 @@
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <Label Content="Voice Command" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="97" Margin="10,0,0,0"/>
-        <TextBox Name="uiTextBoxGrammer" Grid.Row="1" Height="22" Margin="10,26,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <Label Content="Keystrokes" Grid.Row="2" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="82" Margin="10,0.429,0,0"/>
-        <Button Name="uiButRecord" Grid.Row="2" Content="Record" Margin="92,5.857,446.286,46.286" Click="uiButRecord_Click" ToolTip="Click to START recording keystrokes." />
-        <Button x:Name="uiButClearKeyStrokes" Grid.Row="2" Content="Clear" Margin="220,5.857,365.286,46.286" Click="uiButClearKeyStrokes_Click" ToolTip="Click to clear recorded keystrokes." />
-        <TextBox IsReadOnly="True" Name="uiTextBoxKeyStrokes" Grid.Row="2" Margin="10,40,10,0" TextWrapping="Wrap" TextAlignment="Left" VerticalAlignment="Top" MinWidth="100" Height="22"/>
-        <Button Name="uiButApply" Grid.Row="3" Content="Apply" Margin="0,0,107.286,5.857" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom" Click="uiButApply_Click" />
-        <Button Name="uiButCancel" Grid.Row="3" Content="Cancel" Margin="0,0,10.286,5.857" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="uiButCancel_Click" />
+        <Label Content="Voice Command" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="97" Margin="10,0,0,0"/>
+        <TextBox Name="uiTextBoxGrammer" Grid.Row="1" Grid.Column="1" Height="22" Margin="10,26,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Label Content="Keystrokes" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="82" Margin="10,0.429,0,0"/>
+        <Button Name="uiButRecord" Grid.Row="2" Grid.Column="1" Content="Record" Margin="91.857,5.429,165.286,50.429" Click="uiButRecord_Click" ToolTip="Click to START recording keystrokes." />
+        <Button x:Name="uiButClearKeyStrokes" Grid.Row="2" Grid.Column="1" Content="Clear" Margin="185.857,5.429,68.286,50.429" Click="uiButClearKeyStrokes_Click" ToolTip="Click to clear recorded keystrokes." />
+        <TextBox IsReadOnly="True" Name="uiTextBoxKeyStrokes" Grid.Row="2" Grid.Column="1" Margin="10,40,10,0" TextWrapping="Wrap" TextAlignment="Left" VerticalAlignment="Top" MinWidth="100" Height="22"/>
+        <Button Name="uiButApply" Grid.Row="3" Grid.Column="1" Content="Apply" Margin="0,0,107.286,5.857" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom" Click="uiButApply_Click" />
+        <Button Name="uiButCancel" Grid.Row="3" Grid.Column="1" Content="Cancel" Margin="0,0,10.286,5.857" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="uiButCancel_Click" />
+        <ListView Margin="10,10,10.143,10.429" Grid.RowSpan="3" ItemsSource="{Binding Path=KeyStrokes}" AllowDrop="True">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="140" Header="KeyStroke">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock DataContext="{Binding}" Text="{Binding Mode=OneWay, Converter={StaticResource KeyConverter}}" Width="140"
+                                    MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" Margin="0" Background="Red"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

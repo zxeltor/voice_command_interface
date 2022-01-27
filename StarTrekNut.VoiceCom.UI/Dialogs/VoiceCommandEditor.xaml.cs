@@ -18,8 +18,10 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
         private bool _isInEditMode;
         private ObservableCollection<VoiceCommand> _voiceCommandList;
         private EditorType _editorType;
-        private List<Key> _keyStrokes = new List<Key>();
+        private List<KeyTainer> _keyStrokes = new List<KeyTainer>();
 
+        private KeyTainer _selectedKey = null;
+        
         #region Constructors and Destructors
 
         public VoiceCommandEditor(
@@ -44,10 +46,10 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             }
             set
             {
-                this._voiceCommand = value;
+                this.DataContext = this._voiceCommand = value;
                 this.uiTextBoxGrammer.Text = value.Grammer;
                 this.uiTextBoxKeyStrokes.Text = KeyTranslationHelper.GetVisualKeyString(value.KeyStrokes); //value.KeyStrokesString;
-                this._keyStrokes = value.KeyStrokes;
+                this._keyStrokes = value.KeyStrokes.Select(key => new KeyTainer(key)).ToList();
             }
         }
         #endregion
@@ -94,7 +96,7 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             }
 
             this.VoiceCommand.Grammer = string.IsNullOrWhiteSpace(uiTextBoxGrammer.Text) ? string.Empty : uiTextBoxGrammer.Text;
-            this.VoiceCommand.KeyStrokes = _keyStrokes;
+            this.VoiceCommand.KeyStrokes = _keyStrokes.Select(keyTainer => keyTainer.WindowsKey).ToList();
             
             this.DialogResult = true;
         }
@@ -149,7 +151,7 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
                 e.Key == Key.RightCtrl || e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
             {
                 this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.Key.ToString() : $"+{e.Key}";
-                this._keyStrokes.Add(e.Key);
+                this._keyStrokes.Add(new KeyTainer(e.Key));
 
                 e.Handled = true;
                 return;
@@ -157,14 +159,14 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             else if(e.Key == Key.System)
             {
                 this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.SystemKey.ToString() : $"+{e.SystemKey}";
-                this._keyStrokes.Add(e.SystemKey);
+                this._keyStrokes.Add(new KeyTainer(e.SystemKey));
 
                 e.Handled = true;
                 return;
             }
 
             this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.Key.ToString() : $"+{e.Key}";
-            this._keyStrokes.Add(e.Key);
+            this._keyStrokes.Add(new KeyTainer(e.Key));
 
             e.Handled = true;
         }
@@ -178,6 +180,39 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             this.uiTextBoxKeyStrokes.Text = string.Empty;
             this._keyStrokes.Clear();
         }
+
+        private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender == null)
+                return;
+
+            var textBox = sender as System.Windows.Controls.TextBlock;
+            if (textBox == null)
+                return;
+
+            _selectedKey = textBox.DataContext as KeyTainer;
+        }
+
+        private void TextBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender == null)
+                return;
+
+            var textBox = sender as System.Windows.Controls.TextBlock;
+            if (textBox == null)
+                return;
+
+            var overKey = (KeyTainer)textBox.DataContext;
+
+            if (_selectedKey == null)
+                return;
+
+            var indexOfOverKey = this._keyStrokes.IndexOf(overKey);
+
+            //this._keyStrokes.Remove(_selectedKey);
+
+            _selectedKey = null;
+        }
     }
 
     public enum EditorType
@@ -185,5 +220,15 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
         Add,
         Edit,
         Copy
-    }        
+    }
+
+    public class KeyTainer
+    {
+        public Key WindowsKey { get; private set; }
+
+        public KeyTainer(Key windowsKey)
+        {
+            this.WindowsKey = windowsKey;
+        }
+    }
 }
