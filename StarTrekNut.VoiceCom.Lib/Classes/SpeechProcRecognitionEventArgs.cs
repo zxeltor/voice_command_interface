@@ -7,6 +7,8 @@
     {
         #region Constructors and Destructors
 
+        private Model.LogEntryType _entryType = Model.LogEntryType.Info;
+
         public SpeechProcRecognitionEventArgs()
         {
         }
@@ -20,9 +22,27 @@
             this.RecognitionResultText = recognitionResult;
         }
 
+        public SpeechProcRecognitionEventArgs(string recognitionResult, Model.LogEntryType logEntryType)
+        {
+            this.RecognitionResultText = recognitionResult;
+            this.LogEntryType = logEntryType;
+        }
+
         #endregion
 
         #region Public Properties
+
+        public Model.LogEntryType LogEntryType
+        {
+            get
+            {
+                return this._entryType;
+            }
+            set
+            {
+                this._entryType = value;
+            }
+        }
 
         /// <summary>
         ///     Message sent to the user window.

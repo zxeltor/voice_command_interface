@@ -531,13 +531,13 @@ namespace StarTrekNut.VoiceCom.Lib
             else if (this.RunningProcess == null)
             {
                 this.SendTtsAcknowledge("Command received but application is not running");
-                this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=AppNotRunning"));
+                this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=AppNotRunning", Model.LogEntryType.Warning));
             }
             else if (gramerKeystroke.KeyStrokes == null || !gramerKeystroke.KeyStrokes.Any())
             {
                 // If there's any trouble sending the key, then let's log it.
                 this.SendTtsAcknowledge("Command received but no key strokes defined.");
-                this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=NoKeyStrokes"));
+                this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=NoKeyStrokes", Model.LogEntryType.Warning));
             }
             else
             {
@@ -554,14 +554,14 @@ namespace StarTrekNut.VoiceCom.Lib
                     {
                         // If there's any trouble sending the key, then let's log it.
                         this.SendTtsAcknowledge("Command received but not processed");
-                        this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=Failed"));
+                        this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=Failed", Model.LogEntryType.Error));
                     }
                 }
                 catch(System.Exception exception)
                 {
                     // If there's any trouble sending the key, then let's log it.
                     this.SendTtsAcknowledge("Command received but not processed");
-                    this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=Failed Reason=\"{exception.Message}\""));
+                    this.SendCommandToUserInterfaceLog(sender, new SpeechProcRecognitionEventArgs($"Command received: \"{e.Result.Text}\". Result=Failed Reason=\"{exception.Message}\"", Model.LogEntryType.Error));
                 }
             }
         }

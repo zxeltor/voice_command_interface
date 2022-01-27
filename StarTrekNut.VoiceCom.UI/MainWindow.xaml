@@ -139,24 +139,64 @@
             <TabControl x:Name="uiTabControl" Margin="0,0,0,0" Grid.ColumnSpan="3">
                 <TabItem Header="Log" IsSelected="True">
                     <Grid Background="#FFE5E5E5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
 
-                        <DataGrid x:Name="uiDataGridLog" Margin="0,0,0,0" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Type" MinWidth="80" IsReadOnly="True" Binding="{Binding Path=EntryType}"/>
-                                <DataGridTextColumn Header="Time" MinWidth="100" IsReadOnly="True" Binding="{Binding Path=EntryDateTime}"/>
-                                <DataGridTextColumn Header="Message" MinWidth="700" IsReadOnly="True" Binding="{Binding Path=EntryMessage}"/>
-                                <DataGridTemplateColumn MinWidth="40" IsReadOnly="False">
-                                    <DataGridTemplateColumn.Header>
-                                        <Button Tag="ClearLogs" Name="uiButtonClearLog" ToolTip="Clear log entries." BorderThickness="0" Background="Transparent" Click="uiButtonClear_Click">
-                                            <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
-                                        </Button>
-                                    </DataGridTemplateColumn.Header>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <ListView Name="uiListViewLogs" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" IsEnabled="True" Margin="10,10,10,10">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Type" Width="80">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryType, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryType" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Time" Width="100">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryDateTime, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryDateTime" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Message" Width="700">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryMessage, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryMessage" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="50">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <Button Tag="ClearLogs" Name="uiButtonClearLog" ToolTip="Clear log entries" BorderThickness="0" Background="Transparent" Click="uiButtonClear_Click">
+                                                    <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate/>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Profiles">
@@ -257,7 +297,7 @@
                                         </DataGrid>
                                     </Grid>
                                 </GroupBox>
-                                
+
                                 <GroupBox Header="Voice Command Acknowledgement" Margin="10,171,10,0" Height="193" VerticalAlignment="Top">
                                     <Grid>
                                         <CheckBox x:Name="uiCheckboxEnableCommandAcknowledgement" Content="Enable" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" 
@@ -293,7 +333,7 @@
                                         <Label x:Name="uiMicrophoneName" Content="Microphone" Margin="0,0,-0.142,0" VerticalAlignment="Top" Grid.ColumnSpan="2" />
                                     </Grid>
                                 </GroupBox>
-                                
+
                                 <GroupBox Header="Keystroke Settings" Height="100" Margin="10,57,9.714,0" VerticalAlignment="Top">
                                     <Grid>
                                         <Label Content="Delay (milliseconds):" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26"/>

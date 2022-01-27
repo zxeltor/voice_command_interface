@@ -258,7 +258,7 @@ namespace StarTrekNut.VoiceCom.UI
             if (mainSettings.IsNewFile)
                 this.uiButtonSaveCharSettings_Click(this, null);
 
-            LogInfo($"Using default microphone: \"{this.SpeechProcessor.DefaultMicrophone}\"");
+            SendMessageToUi($"Using default microphone: \"{this.SpeechProcessor.DefaultMicrophone}\"");
             this.uiMicrophoneName.Content = this.SpeechProcessor.DefaultMicrophone;
 
             this.DataContext = this._myDataContext;
@@ -292,14 +292,14 @@ namespace StarTrekNut.VoiceCom.UI
 
                 this.Dispatcher.Invoke(() =>
                 {
-                    LogInfo($"Version check completed. v{webVersion.Major}.{webVersion.Minor}.{webVersion.Build} is the latest.");
+                    SendMessageToUi($"Version check completed. v{webVersion.Major}.{webVersion.Minor}.{webVersion.Build} is the latest.");
                 });
             }
             catch(System.Exception e)
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    LogError("Failed to get lastest software version from the web site.", e);
+                    SendMessageToUi($"Failed to get lastest software version from the web site. Reason=\"{e.Message}\"", Lib.Model.LogEntryType.Warning);
                 });
             }
         }
@@ -322,7 +322,7 @@ namespace StarTrekNut.VoiceCom.UI
         private void SpeechProc_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals("IsRecognizerRunning"))
-                LogInfo(this.SpeechProcessor.IsRecognizerRunning ? "Speech recognition is ENABLED" : "Speech recognition is DISABLED");
+                SendMessageToUi(this.SpeechProcessor.IsRecognizerRunning ? "Speech recognition is ENABLED" : "Speech recognition is DISABLED");
             else if (e.PropertyName.Equals("IsSelectedProcessRunning"))
                 if (this._myDataContext.SpeechProcessor.IsSelectedProcessRunning)
                     this.Dispatcher.Invoke(
@@ -342,7 +342,7 @@ namespace StarTrekNut.VoiceCom.UI
 
         private void SpeechProc_SpeechRecognized(object sender, SpeechProcRecognitionEventArgs e)
         {
-            LogInfo(e.RecognitionResultText);
+            SendMessageToUi(e.RecognitionResultText, e.LogEntryType);
         }
 
         private void uiButTestTts_Click(object sender, RoutedEventArgs e)
@@ -474,13 +474,15 @@ namespace StarTrekNut.VoiceCom.UI
 
                 Properties.Settings.Default.Save();
                 this.SpeechProcessor?.SetUserProfileCommandGrammerKeyStrokes(this._myDataContext.SelectedProfileSettings?.VoiceCommandList?.ToList());
-                LogInfo("Profile and settings information has been saved.");
+                SendMessageToUi("Profile and settings information has been saved.");
                 this._myDataContext.HasProfileChanges = false;
                 this._myDataContext.HasSettingsChanges = false;
             }
             catch (Exception exception)
             {
-                this.DisplayApplicationErrorBox($"Failed to save profile and settings information to disk.\n\nAdditional Error Info: {exception.Message}");
+                var message = $"Failed to save profile and settings information to disk.\n\nAdditional Error Info: {exception.Message}";
+                SendMessageToUi(message, Lib.Model.LogEntryType.Error);
+                this.DisplayApplicationErrorBox(message);
             }
         }
 
@@ -763,21 +765,28 @@ namespace StarTrekNut.VoiceCom.UI
             catch(Exception exception)
             {
                 DisplayApplicationErrorBox("Failed to open application web page. Confirm you have a default web browser selected in Windows.");
-                LogError($"Failed to open application web page. Error={exception.Message}", exception);
+                SendMessageToUi($"Failed to open application web page. Error={exception.Message}", Lib.Model.LogEntryType.Error);
                 return;
             }
         }
         
-        private void LogInfo(string message)
+        private void SendMessageToUi(string message, Lib.Model.LogEntryType logEntryType = Lib.Model.LogEntryType.Info)
         {
-            if(this._myDataContext != null)
-                this._myDataContext.Logger.Info(message);
-        }
+            if (this._myDataContext == null)
+                return;
 
-        private void LogError(string message, Exception e = null)
-        {
-            if(this._myDataContext != null)
-                this._myDataContext.Logger.Error(message, e);
+            if (logEntryType == Lib.Model.LogEntryType.Error)
+            {
+                this._myDataContext.Logger.Error(message);
+            }
+            else if (logEntryType == Lib.Model.LogEntryType.Warning)
+            {
+                this._myDataContext.Logger.Warning(message);
+            }
+            else
+            {
+                this._myDataContext.Logger.Info(message);
+            }
         }
         #endregion
     }

@@ -115,9 +115,8 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
                 this.uiTextBoxKeyStrokes.Foreground = new SolidColorBrush(Colors.Red);
                 this.uiButRecord.PreviewKeyDown += this.uiTextBlockRecord_KeyDown;
                 this.uiTextBoxKeyStrokes.PreviewKeyDown += this.uiTextBlockRecord_KeyDown;
-
-                this.uiTextBoxKeyStrokes.Text = string.Empty;
-                this._keyStrokes.Clear();
+                //this.uiTextBoxKeyStrokes.Text = string.Empty;
+                //this._keyStrokes.Clear();
             }
             else
             {
