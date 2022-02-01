@@ -10,7 +10,7 @@ namespace StarTrekNut.VoiceCom.UI.Classes
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null && !(bool)value ? "Disable the speech recognition engine" : "You must save settings before enabling speech recognition";
+            return value != null && !(bool)value ? "Disable speech recognition" : "Enable speech recognition";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
