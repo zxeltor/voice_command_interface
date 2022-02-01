@@ -83,7 +83,7 @@ With this enabled, the software will check for the latest version of Voice Comma
 ## Use with World of Warcraft
 I started by adding spells and abilities to my actions bars, then setting keybinds to those spells and abilities. I used SHIFT+F1, CTRL+F1, and etc. I then created a voice recognition profile for WOW, and added voice commands to send keystrokes like SHIFT+F1, CTRL+F1, and etc to WOW.
 
-![ProfileTab](ScreenShots/ProfilesTab_WOW.png?v17-10-2021)
+![ProfileTab](ScreenShots/ProfileTab_WOW.png?v17-10-2021)
 As an example from the above profile tab. When I say "engage bull rush", the SHIFT+F1 key combination is sent to WOW, and WOW responds by clicking the actionbar button I keybinded with SHIFT-F1.
 ## Disclaimer
 This software and any related documentation is provided “as is” without warranty of any kind, either express or implied, including, without limitation, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement. Licensee accepts any and all risk arising out of use or performance of Software.
