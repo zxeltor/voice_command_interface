@@ -360,7 +360,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StarTrekNut.VoiceCom.Lib, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StarTrekNut.VoiceCom.Lib, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_355AFC468F740E8EE23FFF77E182C093"
@@ -422,7 +422,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StarTrekNut.Utils, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:StarTrekNut.Utils, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_4773F708DAB9158916D4540A964D32F3"
@@ -742,15 +742,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Voice Command Interface"
-        "ProductCode" = "8:{EBEAA4B1-58CA-411F-9CC0-40E30DFD6F4C}"
-        "PackageCode" = "8:{FC272ABD-734D-4EC5-90FD-6840BBBD297A}"
+        "ProductCode" = "8:{DD59695C-8AE2-4669-8C57-CF6087EB8947}"
+        "PackageCode" = "8:{F17848AD-0AAC-4F9C-A761-D78112B731E0}"
         "UpgradeCode" = "8:{24F84DF6-EB76-4D4E-B0B1-DFAAF96671FD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:4.0.2"
+        "ProductVersion" = "8:4.2.0"
         "Manufacturer" = "8:Zxeltor"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.starfleet.engineer/projects"
@@ -1444,7 +1444,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5EF5CA91836A4F4FBA14487BE2A48F66"
             {
-            "SourcePath" = "8:..\\StarTrekNut.VoiceCom.UI\\obj\\Release\\VoiceComInterface.exe"
+            "SourcePath" = "8:..\\StarTrekNut.VoiceCom.UI\\obj\\Debug\\VoiceComInterface.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0D1B3D90478B44C194D3973FE0002223"

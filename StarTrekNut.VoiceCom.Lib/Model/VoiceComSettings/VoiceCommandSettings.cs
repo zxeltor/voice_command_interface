@@ -38,6 +38,9 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
                 this.NotifyPropertyChange("UserList");
             }
         }
+
+        [XmlAttribute]
+        public string Version => "4.0.0.0";
         
         [XmlIgnore]
         public bool IsNewFile { get; set; }

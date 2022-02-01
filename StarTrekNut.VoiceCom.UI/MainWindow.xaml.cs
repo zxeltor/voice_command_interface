@@ -118,7 +118,7 @@ namespace StarTrekNut.VoiceCom.UI
                     Settings.Default.VoiceCommandSettings = new VoiceCommandSettings();
                 }
             }
-            
+
             var userConfig = Settings.Default.VoiceCommandSettings.UserList.FirstOrDefault();
 
             if (userConfig == null)
@@ -258,7 +258,7 @@ namespace StarTrekNut.VoiceCom.UI
             if (mainSettings.IsNewFile)
                 this.uiButtonSaveCharSettings_Click(this, null);
 
-            LogInfo($"Using default microphone: \"{this.SpeechProcessor.DefaultMicrophone}\"");
+            SendMessageToUi($"Using default microphone: \"{this.SpeechProcessor.DefaultMicrophone}\"");
             this.uiMicrophoneName.Content = this.SpeechProcessor.DefaultMicrophone;
 
             this.DataContext = this._myDataContext;
@@ -292,14 +292,14 @@ namespace StarTrekNut.VoiceCom.UI
 
                 this.Dispatcher.Invoke(() =>
                 {
-                    LogInfo($"Version check completed. v{webVersion.Major}.{webVersion.Minor}.{webVersion.Build} is the latest.");
+                    SendMessageToUi($"Version check completed. v{webVersion.Major}.{webVersion.Minor}.{webVersion.Build} is the latest.");
                 });
             }
             catch(System.Exception e)
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    LogError("Failed to get lastest software version from the web site.", e);
+                    SendMessageToUi($"Failed to get lastest software version from the web site. Reason=\"{e.Message}\"", Lib.Model.LogEntryType.Warning);
                 });
             }
         }
@@ -309,6 +309,8 @@ namespace StarTrekNut.VoiceCom.UI
             this.Closing -= this.OnClosing;
 
             this.DisableSoftwareUpdateCheck();
+
+            Properties.Settings.Default.Save();
 
             this.Cleanup();
         }
@@ -322,7 +324,7 @@ namespace StarTrekNut.VoiceCom.UI
         private void SpeechProc_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals("IsRecognizerRunning"))
-                LogInfo(this.SpeechProcessor.IsRecognizerRunning ? "Speech recognition is ENABLED" : "Speech recognition is DISABLED");
+                SendMessageToUi(this.SpeechProcessor.IsRecognizerRunning ? "Speech recognition is ENABLED" : "Speech recognition is DISABLED");
             else if (e.PropertyName.Equals("IsSelectedProcessRunning"))
                 if (this._myDataContext.SpeechProcessor.IsSelectedProcessRunning)
                     this.Dispatcher.Invoke(
@@ -342,7 +344,7 @@ namespace StarTrekNut.VoiceCom.UI
 
         private void SpeechProc_SpeechRecognized(object sender, SpeechProcRecognitionEventArgs e)
         {
-            LogInfo(e.RecognitionResultText);
+            SendMessageToUi(e.RecognitionResultText, e.LogEntryType);
         }
 
         private void uiButTestTts_Click(object sender, RoutedEventArgs e)
@@ -387,6 +389,8 @@ namespace StarTrekNut.VoiceCom.UI
 
             this._myDataContext.SelectedExecutable.ProfileSettingsList.Add(profSettings);
             this._myDataContext.SelectedProfileSettings = profSettings;
+
+            this.uiButtonSaveCharSettings_Click(sender, null);
         }
                 
         private void uiButtonAddHotkey_Click(object sender, RoutedEventArgs e)
@@ -423,6 +427,7 @@ namespace StarTrekNut.VoiceCom.UI
                         this.SpeechProcessor.IsRecognizerRunning = false;
 
                     this._myDataContext.SelectedUser.ExecutableList.Remove(this._myDataContext.SelectedExecutable);
+                    this.uiButtonSaveCharSettings_Click(sender, null);
                 }
             }
         }
@@ -462,6 +467,7 @@ namespace StarTrekNut.VoiceCom.UI
             {
                 this._myDataContext.SelectedExecutable.ProfileSettingsList.Remove(this._myDataContext.SelectedProfileSettings);
                 this._myDataContext.SelectedProfileSettings = null;
+                this.uiButtonSaveCharSettings_Click(sender, null);
             }
         }
 
@@ -472,15 +478,14 @@ namespace StarTrekNut.VoiceCom.UI
                 if (this.SpeechProcessor != null && this.SpeechProcessor.IsRecognizerRunning)
                     this.SpeechProcessor.IsRecognizerRunning = false;
 
-                Properties.Settings.Default.Save();
                 this.SpeechProcessor?.SetUserProfileCommandGrammerKeyStrokes(this._myDataContext.SelectedProfileSettings?.VoiceCommandList?.ToList());
-                LogInfo("Profile and settings information has been saved.");
                 this._myDataContext.HasProfileChanges = false;
                 this._myDataContext.HasSettingsChanges = false;
             }
             catch (Exception exception)
             {
-                this.DisplayApplicationErrorBox($"Failed to save profile and settings information to disk.\n\nAdditional Error Info: {exception.Message}");
+                var message = $"Failed to send key strokes to recognition engine.\n\nAdditional Error Info: {exception.Message}";
+                this.DisplayApplicationErrorBox(message);
             }
         }
 
@@ -502,6 +507,8 @@ namespace StarTrekNut.VoiceCom.UI
                 }
 
                 this._myDataContext.SelectedExecutable = exeFound;
+
+                this.uiButtonSaveCharSettings_Click(sender, null);
             }
         }
 
@@ -512,19 +519,16 @@ namespace StarTrekNut.VoiceCom.UI
                     this._myDataContext.SelectedUser.StartupSpeechRecogSettings.SelectedEngine = selectedVoice;
         }
 
-        private void uiComboBoxSelectedCharacter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void uiComboBoxSelectedCharacter_SelectionChanged(object sender, EventArgs e)
         {
             if (this.uiComboBoxSelectedCharacter == sender)
             {
                 if (this.uiComboBoxSelectedCharacter.SelectedItem is ProfileSettings selectedProfile)
                 {
                     this._myDataContext.SelectedExecutable.StartupProfileName = selectedProfile.ProfileName;
-                    this.uiListViewVoiceCommands.IsEnabled = true;
                 }
-                else
-                {
-                    this.uiListViewVoiceCommands.IsEnabled = false;
-                }
+
+                this.uiButtonSaveCharSettings_Click(sender, null);
             }
         }
 
@@ -560,6 +564,7 @@ namespace StarTrekNut.VoiceCom.UI
                 if (diagResult.HasValue && diagResult.Value)
                 {
                     this._myDataContext.SelectedProfileSettings.VoiceCommandList.Add(dialog.VoiceCommand);
+                    this.uiButtonSaveCharSettings_Click(sender, null);
                 }
             }
         }
@@ -582,6 +587,8 @@ namespace StarTrekNut.VoiceCom.UI
                 dialog.Owner = this;
 
                 var diagResult = dialog.ShowDialog();
+                if(diagResult.HasValue && diagResult.Value)
+                    this.uiButtonSaveCharSettings_Click(sender, null);
             }
         }
 
@@ -611,6 +618,7 @@ namespace StarTrekNut.VoiceCom.UI
                 if (diagResult.HasValue && diagResult.Value)
                 {
                     this._myDataContext.SelectedProfileSettings.VoiceCommandList.Add(dialog.VoiceCommand);
+                    this.uiButtonSaveCharSettings_Click(sender, null);
                 }
             }
         }
@@ -635,6 +643,8 @@ namespace StarTrekNut.VoiceCom.UI
                         return;
 
                     this._myDataContext.SelectedProfileSettings.VoiceCommandList.Remove(voiceCommand);
+
+                    this.uiButtonSaveCharSettings_Click(sender, null);
                 }
                 else
                 {
@@ -642,25 +652,11 @@ namespace StarTrekNut.VoiceCom.UI
                 }
             }
         }
-
-        private void EnableProfileSection(bool enable)
-        {
-            label1.IsEnabled = enable;
-            uiComboBoxSelectedCharacter.IsEnabled = enable;
-            uiButtonRemoveSelectedChar.IsEnabled = enable;
-            uiGroupBoxCreateProfile.IsEnabled = enable;
-        }
+                
                
-        private void UiComboBoxApplication_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void UiComboBoxApplication_SelectionChanged(object sender, EventArgs e)
         {
-            if (this._myDataContext.SelectedExecutable == null)
-            {
-                this.EnableProfileSection(false);
-            }
-            else
-            {
-                this.EnableProfileSection(true);
-            }
+            this.uiButtonSaveCharSettings_Click(sender, null);
         }
 
         private void UiButtonImport_Click(object sender, RoutedEventArgs e)
@@ -763,22 +759,34 @@ namespace StarTrekNut.VoiceCom.UI
             catch(Exception exception)
             {
                 DisplayApplicationErrorBox("Failed to open application web page. Confirm you have a default web browser selected in Windows.");
-                LogError($"Failed to open application web page. Error={exception.Message}", exception);
+                SendMessageToUi($"Failed to open application web page. Error={exception.Message}", Lib.Model.LogEntryType.Error);
                 return;
             }
         }
         
-        private void LogInfo(string message)
+        private void SendMessageToUi(string message, Lib.Model.LogEntryType logEntryType = Lib.Model.LogEntryType.Info)
         {
-            if(this._myDataContext != null)
-                this._myDataContext.Logger.Info(message);
-        }
+            if (this._myDataContext == null)
+                return;
 
-        private void LogError(string message, Exception e = null)
-        {
-            if(this._myDataContext != null)
-                this._myDataContext.Logger.Error(message, e);
+            if (logEntryType == Lib.Model.LogEntryType.Error)
+            {
+                this._myDataContext.Logger.Error(message);
+            }
+            else if (logEntryType == Lib.Model.LogEntryType.Warning)
+            {
+                this._myDataContext.Logger.Warning(message);
+            }
+            else
+            {
+                this._myDataContext.Logger.Info(message);
+            }
         }
         #endregion
+
+        private void EnableVoiceCommandCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            this.uiButtonSaveCharSettings_Click(sender, null);
+        }
     }
 }

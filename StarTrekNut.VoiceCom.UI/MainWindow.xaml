@@ -13,6 +13,7 @@
         <classes:KeyConverter x:Key="KeyConverter" />
         <classes:BoolInverseConverter x:Key="BoolInvConverter" />
         <classes:IsEnabledConverter x:Key="IsEnabledConverter" />
+        <classes:ObjectNullToBoolConverter x:Key="ObjectNullToBoolConverter" />
         <classes:VisibilityConverter x:Key="VisibilityConverter" />
         <BitmapImage x:Key="QuestionmarkIcon" UriSource="icons/glyphicons-195-question-sign.png" />
         <BitmapImage x:Key="InfoIcon" UriSource="icons/glyphicons-196-info-sign.png" />
@@ -26,7 +27,7 @@
         </DataTemplate>
         <DataTemplate x:Key="EnableColumnCellTemplate">
             <DockPanel>
-                <CheckBox Foreground="DarkBlue" HorizontalAlignment="Center">
+                <CheckBox Foreground="DarkBlue" HorizontalAlignment="Center" Click="EnableVoiceCommandCheckBox_Click" ToolTip="Enable/Disable the voice command">
                     <CheckBox.IsChecked>
                         <Binding Path="Enabled" Mode="TwoWay" />
                     </CheckBox.IsChecked>
@@ -102,8 +103,8 @@
                 <ColumnDefinition Width="20*"/>
             </Grid.ColumnDefinitions>
             <StatusBar Grid.Row="1" Grid.Column="0" Width="Auto" FlowDirection="LeftToRight">
-                <Label Name="uiLabelExeName" Content="{Binding Path=SelectedUser.StartupExecutableName}" Width="Auto" Height="Auto"/>
-                <Label Name="uiLabelaExeStatus" Content="Not Running" Foreground="Blue" Width="80" Height="Auto"/>
+                <Label Name="uiLabelExeName" Content="{Binding Path=SelectedUser.StartupExecutableName}" Width="Auto" Height="Auto" ToolTip="The targeted application."/>
+                <Label Name="uiLabelaExeStatus" Content="Not Running" Foreground="Blue" Width="80" Height="Auto" ToolTip="Targeted application status"/>
                 <Separator/>
                 <Label Content="Profile:" Width="Auto" Height="Auto" ToolTip="The currently selected character profile"/>
                 <Label Name="wuiLabelWowStatus" Content="{Binding Path=SelectedProfileSettings.ProfileName, Mode=OneWay}" 
@@ -111,16 +112,9 @@
                        Foreground="Green" Width="Auto" Height="Auto"/>
             </StatusBar>
             <StatusBar Grid.Row="1" Grid.Column="1" FlowDirection="RightToLeft">
-                <!--<Button x:Name="uiButtonCancelCharSettings" IsEnabled="False" Click="uiButtonCancelCharSettings_Click" Content="Cancel" 
-                    Padding="6,2,6,2"
-                    Width="Auto" Height="Auto" ToolTip="Cancel profile and configuration changes and reload from disk." Margin="4,0,0,0" />-->
-                <Button x:Name="uiButtonSaveCharSettings" Click="uiButtonSaveCharSettings_Click" Content="Save Settings" Height="Auto"
-                    Padding="6,2,6,2"
-                    ToolTip="Save profile and configuration information to disk." Width="Auto" Margin="4,0,0,0" />
                 <CheckBox Name="uiCheckboxSpeechEnaled" Content="Speech Recognition" FlowDirection="LeftToRight" 
-                    IsEnabled="{Binding Path=HasProfileChanges, Mode=OneWay, Converter={StaticResource BoolInvConverter}}"
                     IsChecked="{Binding Path=SpeechProcessor.IsRecognizerRunning, Mode=TwoWay}" Margin="4,0,0,0"
-                    ToolTip="{Binding Path=HasProfileChanges, Mode=OneWay, Converter={StaticResource IsEnabledConverter}}"/>
+                    ToolTip="Enable speech recognition"/>
             </StatusBar>
             <StatusBar Grid.Row="1" Grid.Column="2" FlowDirection="RightToLeft">
                 <Button Name="uiButtonHelp" ToolTip="Click to open the web page for this application."
@@ -131,32 +125,68 @@
                        ToolTip="A newer version of the software is available.">
                     <Image Source="{StaticResource DownloadIcon}" Width="18" Height="18" />
                 </Label>
-                <Label Visibility="{Binding Path=HasProfileChanges, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
-                       ToolTip="Profile changes have disabled Speech Recognition.">
-                    <Image Source="{StaticResource InfoIcon}" Width="18" Height="18" />
-                </Label>
             </StatusBar>
             <TabControl x:Name="uiTabControl" Margin="0,0,0,0" Grid.ColumnSpan="3">
                 <TabItem Header="Log" IsSelected="True">
                     <Grid Background="#FFE5E5E5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
 
-                        <DataGrid x:Name="uiDataGridLog" Margin="0,0,0,0" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Type" MinWidth="80" IsReadOnly="True" Binding="{Binding Path=EntryType}"/>
-                                <DataGridTextColumn Header="Time" MinWidth="100" IsReadOnly="True" Binding="{Binding Path=EntryDateTime}"/>
-                                <DataGridTextColumn Header="Message" MinWidth="700" IsReadOnly="True" Binding="{Binding Path=EntryMessage}"/>
-                                <DataGridTemplateColumn MinWidth="40" IsReadOnly="False">
-                                    <DataGridTemplateColumn.Header>
-                                        <Button Tag="ClearLogs" Name="uiButtonClearLog" ToolTip="Clear log entries." BorderThickness="0" Background="Transparent" Click="uiButtonClear_Click">
-                                            <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
-                                        </Button>
-                                    </DataGridTemplateColumn.Header>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <ListView Name="uiListViewLogs" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" IsEnabled="True" Margin="10,10,10,10">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Type" Width="80">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryType, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryType" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Time" Width="140">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryDateTime, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryDateTime" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Message" Width="660">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryMessage, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryMessage" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="50">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <Button Tag="ClearLogs" Name="uiButtonClearLog" ToolTip="Clear log entries" BorderThickness="0" Background="Transparent" Click="uiButtonClear_Click">
+                                                    <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate/>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Profiles">
@@ -169,23 +199,24 @@
                         <ComboBox Name="uiComboBoxApplication" Grid.Column="1" Margin="87,14,10,0" VerticalAlignment="Top" Height="26"
                                   ItemsSource="{Binding Path=SelectedUser.ExecutableList, Mode=OneWay}"
                                   SelectedItem="{Binding Path=SelectedExecutable, Mode=TwoWay}"
-                                  SelectionChanged="UiComboBoxApplication_SelectionChanged" />
-                        <Button Grid.Column="1" IsEnabled="True" x:Name="uiButtonAddApplication" Content="Add App" Height="26" Margin="0,45,104,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="66" Click="uiButtonAddExe_Click"/>
-                        <Button Grid.Column="1" IsEnabled="True" x:Name="uiButtonRemoveApplication" Content="Remove App" Height="26" Margin="0,45,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Click="uiButtonRemoveApplication_Click"/>
+                                  DropDownClosed="UiComboBoxApplication_SelectionChanged" />
+                        <Button Grid.Column="1" IsEnabled="True" x:Name="uiButtonAddApplication" ToolTip="Add a new application" Content="Add App" Height="26" Margin="0,45,104,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="66" Click="uiButtonAddExe_Click"/>
+                        <Button Grid.Column="1" IsEnabled="True" x:Name="uiButtonRemoveApplication" ToolTip="Remove the selected application" Content="Remove App" Height="26" Margin="0,45,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Click="uiButtonRemoveApplication_Click"/>
 
-                        <ComboBox x:Name="uiComboBoxSelectedCharacter" IsEnabled="False"
+                        <ComboBox x:Name="uiComboBoxSelectedCharacter" IsEnabled="{Binding Path=SelectedExecutable, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}"
                                   ItemsSource="{Binding Path=SelectedExecutable.ProfileSettingsList}" 
                                   SelectedItem="{Binding Path=SelectedProfileSettings}"
-                                  SelectionChanged="uiComboBoxSelectedCharacter_SelectionChanged"
+                                  DropDownClosed="uiComboBoxSelectedCharacter_SelectionChanged"
                                   Grid.Column="1" Height="26" Margin="68,100,10,0" VerticalAlignment="Top"/>
 
                         <Label x:Name="label1" Content="Profile:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="53"/>
 
-                        <GroupBox x:Name="uiGroupBoxCreateProfile" IsEnabled="False" Grid.Column="1" Header="Create Profile" Height="144" Margin="10,175,10,0" VerticalAlignment="Top">
+                        <GroupBox x:Name="uiGroupBoxCreateProfile" IsEnabled="{Binding Path=SelectedExecutable, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}" 
+                                  Grid.Column="1" Header="Create New Profile" Height="148" Margin="10,175,10,0" VerticalAlignment="Top">
                             <Grid>
-                                <Button x:Name="uiButtonAddCharacter" Content="Create" Click="uiButtonAddCharacter_Click" HorizontalAlignment="Left" Margin="14,43,0,0" VerticalAlignment="Top" Width="67" Height="46"/>
-                                <RadioButton x:Name="uiRadioButtonNew" GroupName="Character" Content="Empty Character" IsChecked="True" HorizontalAlignment="Left" Margin="87,46,0,0" VerticalAlignment="Top" Width="134"/>
-                                <RadioButton x:Name="uiRadioButtonCopy" GroupName="Character" Content="Copy Selected" HorizontalAlignment="Left" Margin="87,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
+                                <Button x:Name="uiButtonAddCharacter" Content="Create" Click="uiButtonAddCharacter_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="67" Height="46" ToolTip="Create a new application profile"/>
+                                <RadioButton x:Name="uiRadioButtonNew" ToolTip="Create an empty profile" GroupName="Character" Content="Empty Character" IsChecked="True" HorizontalAlignment="Left" Margin="96,11,0,0" VerticalAlignment="Top" Width="134"/>
+                                <RadioButton x:Name="uiRadioButtonCopy" ToolTip="Create a copy of the currently selected profile" GroupName="Character" Content="Copy Selected" HorizontalAlignment="Left" Margin="96,36,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
                                     <RadioButton.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -195,12 +226,14 @@
                                         </TransformGroup>
                                     </RadioButton.RenderTransform>
                                 </RadioButton>
-                                <Label x:Name="label2" Content="Name:" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top"/>
-                                <TextBox x:Name="uiTextBoxNewCharacterName" Height="23" Margin="59,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="179"/>
+                                <Label ToolTip="The name used when you create a new application profile" x:Name="label2" Content="New Profile Name:" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top"/>
+                                <TextBox ToolTip="The name used when you create a new application profile" x:Name="uiTextBoxNewCharacterName" Height="23" Margin="10,91,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                             </Grid>
                         </GroupBox>
-                        <Button x:Name="uiButtonRemoveSelectedChar" IsEnabled="False" Click="uiButtonRemoveSelectedChar_Click" Content="Remove Profile" Grid.Column="1" Margin="0,132,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Height="26"/>
-                        <ListView Name="uiListViewVoiceCommands" IsEnabled="False" Margin="10"
+                        <Button x:Name="uiButtonRemoveSelectedChar" ToolTip="Remove the selected application profile" IsEnabled="{Binding Path=SelectedProfileSettings, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}" 
+                                Click="uiButtonRemoveSelectedChar_Click" Content="Remove Profile" Grid.Column="1" Margin="0,132,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Height="26"/>
+                        <ListView Name="uiListViewVoiceCommands" IsEnabled="{Binding Path=SelectedProfileSettings, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}"
+                                  Margin="10"
                                   ItemsSource="{Binding Path=SelectedProfileSettings.VoiceCommandList, Mode=TwoWay}">
                             <ListView.View>
                                 <GridView>
@@ -236,7 +269,8 @@
                                 <ComboBox x:Name="uiComboBoxRecognitionEngines" 
                                     ItemsSource="{Binding SpeechProcessor.RecogEngines, Converter={StaticResource RecogConverter}, Mode=OneWay}"
                                     SelectedItem="{Binding SpeechProcessor.SelectedRecognizer, Converter={StaticResource RecogConverter}, Mode=TwoWay}" SelectionChanged="uiComboBoxRecognitionEngines_SelectionChanged" 
-                                    Margin="10,27,9.714,0" VerticalAlignment="Top" Height="22"/>
+                                    Margin="10,27,9.714,0" VerticalAlignment="Top" Height="22"
+                                          ToolTip="The currently selected voice recognition engine"/>
 
                                 <GroupBox Header="Pause Keys" Margin="10,54,10,0" Height="112" VerticalAlignment="Top">
                                     <Grid>
@@ -257,23 +291,24 @@
                                         </DataGrid>
                                     </Grid>
                                 </GroupBox>
-                                
+
                                 <GroupBox Header="Voice Command Acknowledgement" Margin="10,171,10,0" Height="193" VerticalAlignment="Top">
                                     <Grid>
                                         <CheckBox x:Name="uiCheckboxEnableCommandAcknowledgement" Content="Enable" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" 
                                                   Width="Auto" Margin="10,10,0,0" IsChecked="{Binding SelectedUser.StartupTtsSettings.EnableTtsCommandAck, Mode=TwoWay}"
                                     ToolTip="This enables an audible acknowledgement for each recognized voice command to this application." />
-                                        <Button x:Name="uiButTestTts" Margin="0,10,10,0" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Width="58" Click="uiButTestTts_Click" Content="Test"/>
+                                        <Button ToolTip="Test the currently selected acknowledgement settings" x:Name="uiButTestTts" Margin="0,10,10,0" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Width="58" Click="uiButTestTts_Click" Content="Test"/>
                                         <Label Content="Operating System Voice:" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="142"
                                     ToolTip="Select the installed operating system voice for command acknowledgement." />
                                         <ComboBox x:Name="uiComboBoxTtsVoices"
                                     ItemsSource="{Binding SpeechProcessor.TtsVoices, Converter={StaticResource TtsVoiceConverter}, Mode=OneWay}"
                                     SelectedItem="{Binding SelectedUser.StartupTtsSettings.SelectedVoice, Converter={StaticResource TtsVoiceConverter}, Mode=OneWay}" Margin="10,70,10,0" VerticalAlignment="Top"
-                                    SelectionChanged="uiComboBoxTtsVoices_SelectionChanged"/>
+                                    SelectionChanged="uiComboBoxTtsVoices_SelectionChanged" ToolTip="The current selected operating system voice"/>
 
                                         <Label Content="Volume:" HorizontalAlignment="Left" Margin="15,106,0,0" VerticalAlignment="Top" Height="26"/>
-                                        <Slider x:Name="uiSliderTtsVolume" Margin="10,132,10,0" VerticalAlignment="Top" Value="{Binding SelectedUser.StartupTtsSettings.SelectedVolume, Mode=TwoWay}" Minimum="0" Maximum="100" 
-                                    SmallChange="1" LargeChange="10" TickPlacement="Both" TickFrequency="10" ValueChanged="uiSliderTtsVolume_ValueChanged" />
+                                        <Slider x:Name="uiSliderTtsVolume" Margin="10,132,10,0" VerticalAlignment="Top" Value="{Binding SelectedUser.StartupTtsSettings.SelectedVolume, Mode=TwoWay}" Minimum="0" Maximum="100"
+                                            ToolTip="Volume setting for voice command acknowledgement"
+                                            SmallChange="1" LargeChange="10" TickPlacement="Both" TickFrequency="10" ValueChanged="uiSliderTtsVolume_ValueChanged" />
                                         <TextBlock Margin="73,111,0,0" TextWrapping="Wrap" Text="{Binding SelectedUser.StartupTtsSettings.SelectedVolume, Mode=OneWay}" VerticalAlignment="Top" RenderTransformOrigin="1.615,0.564" HorizontalAlignment="Left" Width="35"/>
 
                                     </Grid>
@@ -284,7 +319,7 @@
 
                         <GroupBox Grid.Column="1" Header="Misc Settings" Margin="10,0,0,10">
                             <Grid>
-                                <GroupBox Header="Microphone" Margin="10,1,10,0" Height="52" VerticalAlignment="Top">
+                                <GroupBox Header="Microphone" Margin="10,1,10,0" Height="52" VerticalAlignment="Top" ToolTip="The operating system default mmicrophone used for voice command recognition">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="6*"/>
@@ -293,13 +328,13 @@
                                         <Label x:Name="uiMicrophoneName" Content="Microphone" Margin="0,0,-0.142,0" VerticalAlignment="Top" Grid.ColumnSpan="2" />
                                     </Grid>
                                 </GroupBox>
-                                
+
                                 <GroupBox Header="Keystroke Settings" Height="100" Margin="10,57,9.714,0" VerticalAlignment="Top">
                                     <Grid>
                                         <Label Content="Delay (milliseconds):" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26"/>
                                         <TextBlock Margin="128,15,24.714,0" TextWrapping="Wrap" Text="{Binding Path=SelectedUser.SelectedKeystrokeDelayInMilliSeconds, Mode=OneWay}" VerticalAlignment="Top" RenderTransformOrigin="-0.257,2.143"/>
                                         <Slider x:Name="uiSliderKeyStrokeDelay" Margin="10,41,9.714,0" VerticalAlignment="Top" Value="{Binding SelectedUser.SelectedKeystrokeDelayInMilliSeconds, Mode=TwoWay}" Minimum="100" Maximum="2000" 
-                                            SmallChange="1" LargeChange="50" TickPlacement="Both" TickFrequency="50" ValueChanged="uiSliderTtsVolume_ValueChanged" />
+                                            SmallChange="1" LargeChange="50" TickPlacement="Both" TickFrequency="50" ValueChanged="uiSliderTtsVolume_ValueChanged" ToolTip="Delay between sending subsequent key strokes to the target application." />
                                     </Grid>
                                 </GroupBox>
                                 <GroupBox Header="Import / Export Application Settings" Margin="11,162,9.714,0" Height="70" VerticalAlignment="Top">

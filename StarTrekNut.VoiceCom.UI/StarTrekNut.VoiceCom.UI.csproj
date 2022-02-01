@@ -123,6 +123,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\ObjectNullToBoolConverter.cs" />
     <Compile Include="Classes\VisibilityConverter.cs" />
     <Compile Include="Classes\IsEnabledConverter.cs" />
     <Compile Include="Classes\EntryTypeColorConverter.cs" />
@@ -227,6 +228,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\glyphicons-196-info-sign.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\glyphicons-214-arrow-up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\glyphicons-213-arrow-down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\glyphicons-170-record.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

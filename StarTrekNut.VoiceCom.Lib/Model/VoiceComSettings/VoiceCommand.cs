@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
@@ -66,5 +67,10 @@ namespace StarTrekNut.VoiceCom.Lib.Model.VoiceComSettings
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return $"{this.Enabled}|{this.Grammer}|{string.Join("+", this.KeyStrokes.ToList())}";
+        }
     }
 }
