@@ -92,7 +92,6 @@
     <Compile Include="Model\LogEntry.cs" />
     <Compile Include="Model\VoiceComSettings\Executable.cs" />
     <Compile Include="Helpers\KeyTranslationHelper.cs" />
-    <Compile Include="Model\VoiceComSettings\KeyTainer.cs" />
     <Compile Include="Model\VoiceComSettings\ProfileSettings.cs" />
     <Compile Include="Model\VoiceComSettings\SpeechRecogSettings.cs" />
     <Compile Include="Model\VoiceComSettings\TtsSettings.cs" />

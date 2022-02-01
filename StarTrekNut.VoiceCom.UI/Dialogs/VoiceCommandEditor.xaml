@@ -13,8 +13,8 @@
     <Grid Background="#FFE5E5E5">
         <Grid.RowDefinitions>
             <RowDefinition Height="50*" />
-            <RowDefinition Height="30*" />
-            <RowDefinition Height="34*" />
+            <RowDefinition Height="56" />
+            <RowDefinition Height="34" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -25,12 +25,12 @@
             <FlowDocument>
                 <Paragraph>
                     <Bold>
-                        <Run Text="Info:" FontSize="12"/>
+                        <Run Text="Info:" FontSize="11"/>
                     </Bold>
-                    <Run FontSize="12" Text="You can send multiple keystrokes to a windows application. Click the 'Record Keystrokes' button"/>
-                    <Run FontSize="12" Foreground="Red" Text="(It will turn red)"/>
-                    <Run FontSize="12" Text="and start clicking the keys you want to add."/>
-                    <Run FontSize="12" Text="As you're typing the keystrokes, they'll appear in the 'Keystrokes' box below. "/>
+                    <Run FontSize="11" Text="You can send multiple keystrokes to a windows application. Click the 'Record Keystrokes' button"/>
+                    <Run FontSize="11" Foreground="Red" Text="(It will turn red)"/>
+                    <Run FontSize="11" Text="and start clicking the keys you want to add."/>
+                    <Run FontSize="11" Text="As you're typing the keystrokes, they'll appear in the 'Keystrokes' box below. "/>
                 </Paragraph>
                 <Paragraph>
                     <Bold>
@@ -42,20 +42,52 @@
         </RichTextBox>
         <Label Content="Voice Command" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="97" Margin="10,0,0,0"/>
         <TextBox Name="uiTextBoxGrammer" Grid.Row="1" Grid.Column="1" Height="22" Margin="10,26,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <Label Content="Keystrokes" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="82" Margin="10,0.429,0,0"/>
-        <Button Name="uiButRecord" Grid.Row="2" Grid.Column="1" Content="Record" Margin="91.857,5.429,165.286,50.429" Click="uiButRecord_Click" ToolTip="Click to START recording keystrokes." />
-        <Button x:Name="uiButClearKeyStrokes" Grid.Row="2" Grid.Column="1" Content="Clear" Margin="185.857,5.429,68.286,50.429" Click="uiButClearKeyStrokes_Click" ToolTip="Click to clear recorded keystrokes." />
-        <TextBox IsReadOnly="True" Name="uiTextBoxKeyStrokes" Grid.Row="2" Grid.Column="1" Margin="10,40,10,0" TextWrapping="Wrap" TextAlignment="Left" VerticalAlignment="Top" MinWidth="100" Height="22"/>
-        <Button Name="uiButApply" Grid.Row="3" Grid.Column="1" Content="Apply" Margin="0,0,107.286,5.857" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom" Click="uiButApply_Click" />
-        <Button Name="uiButCancel" Grid.Row="3" Grid.Column="1" Content="Cancel" Margin="0,0,10.286,5.857" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="uiButCancel_Click" />
-        <ListView Margin="10,10,10.143,10.429" Grid.RowSpan="3" ItemsSource="{Binding Path=KeyStrokes}" AllowDrop="True">
+
+
+        <Button Name="uiButApply" Grid.Row="2" Grid.Column="1" Content="Apply" Margin="0,0,106.286,6.143" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom" Click="uiButApply_Click" Grid.RowSpan="2" />
+        <Button Name="uiButCancel" Grid.Row="2" Grid.Column="1" Content="Cancel" Margin="0,0,10.286,6.143" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="uiButCancel_Click" Grid.RowSpan="2" />
+        <ListView Name="uiListViewKeystrokes" Margin="10,10,10.143,10.429" Grid.RowSpan="3" ItemsSource="{Binding}" AllowDrop="True">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="140" Header="KeyStroke">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock DataContext="{Binding}" Text="{Binding Mode=OneWay, Converter={StaticResource KeyConverter}}" Width="140"
-                                    MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" Margin="0" Background="Red"/>
+                                <TextBlock DataContext="{Binding Path=WindowsKey, Mode=OneWay}" Text="{Binding Mode=OneWay, Converter={StaticResource KeyConverter}}" Width="140"
+                                    Margin="0" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <Button Tag="RecordKeyStrokesCommand" ToolTip="Record key strokes" Width="20" Height="20" BorderThickness="0" Background="Transparent"
+                                            Click="uiButRecord_Click">
+                                        <Image Source="/VoiceComInterface;component/Icons/glyphicons-170-record.png" Width="15" Height="15"/>
+                                    </Button>
+                                    <Button Tag="DeleteKeyStrokesCommand" ToolTip="Delet key strokes" Width="20" Height="20" Margin="20,0,0,0" BorderThickness="0" Background="Transparent"
+                                            Click="uiButClearKeyStrokes_Click">
+                                        <Image Source="/VoiceComInterface;component/Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
+                                    </Button>
+                                </DockPanel>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <Button Tag="DeleteKeyStrokeCommand" DataContext="{Binding}" ToolTip="Delete key stroke" Width="20" Height="20" BorderThickness="0" Background="Transparent"
+                                            Click="DeleteKeyButton_Click">
+                                        <Image Source="/VoiceComInterface;component/Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
+                                    </Button>
+                                    <Button Tag="MoveKeyStrokeUpCommand" DataContext="{Binding}" ToolTip="Move key stroke up" Width="20" Height="20" Margin="20,0,0,0" BorderThickness="0" Background="Transparent"
+                                            Click="MoveKeyUpButton_Click">
+                                        <Image Source="/VoiceComInterface;component/Icons/glyphicons-214-arrow-up.png" Width="20" Height="20"/>
+                                    </Button>
+                                    <Button Tag="MoveKeyStrokeDownCommand" DataContext="{Binding}" ToolTip="Move key stroke down" Width="20" Height="20" Margin="5,0,0,0" BorderThickness="0" 
+                                            Background="Transparent" Click="MoveKeyDownButton_Click">
+                                        <Image Source="/VoiceComInterface;component/Icons/glyphicons-213-arrow-down.png" Width="20" Height="20"/>
+                                    </Button>
+                                </DockPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

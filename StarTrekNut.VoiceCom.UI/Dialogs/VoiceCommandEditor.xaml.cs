@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -18,10 +19,8 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
         private bool _isInEditMode;
         private ObservableCollection<VoiceCommand> _voiceCommandList;
         private EditorType _editorType;
-        private List<KeyTainer> _keyStrokes = new List<KeyTainer>();
-
-        private KeyTainer _selectedKey = null;
-        
+        private ObservableCollection<KeyTainer> _keyStrokes = new ObservableCollection<KeyTainer>();
+                
         #region Constructors and Destructors
 
         public VoiceCommandEditor(
@@ -46,10 +45,10 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             }
             set
             {
-                this.DataContext = this._voiceCommand = value;
+                this._voiceCommand = value;
                 this.uiTextBoxGrammer.Text = value.Grammer;
-                this.uiTextBoxKeyStrokes.Text = KeyTranslationHelper.GetVisualKeyString(value.KeyStrokes); //value.KeyStrokesString;
-                this._keyStrokes = value.KeyStrokes.Select(key => new KeyTainer(key)).ToList();
+                value.KeyStrokes.ForEach(key => this._keyStrokes.Add(new KeyTainer(key)));
+                this.DataContext = this._keyStrokes;
             }
         }
         #endregion
@@ -69,12 +68,13 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
                 MessageBox.Show("You can't save a voice command with an empty voice command box.", "Voice Command Interface: Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (string.IsNullOrWhiteSpace(uiTextBoxKeyStrokes.Text))
+
+            if (!this._keyStrokes.Any())
             {
                 MessageBox.Show("You can save a voice command with no keystroke(s), but it won't do anything.", "Voice Command Interface: Application Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
-            if(this._editorType == EditorType.Add || this._editorType == EditorType.Copy)
+            if (this._editorType == EditorType.Add || this._editorType == EditorType.Copy)
             {
                 if (_voiceCommandList.Any(com => com.Grammer.Equals(uiTextBoxGrammer.Text, System.StringComparison.CurrentCultureIgnoreCase)))
                 {
@@ -96,7 +96,7 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             }
 
             this.VoiceCommand.Grammer = string.IsNullOrWhiteSpace(uiTextBoxGrammer.Text) ? string.Empty : uiTextBoxGrammer.Text;
-            this.VoiceCommand.KeyStrokes = _keyStrokes.Select(keyTainer => keyTainer.WindowsKey).ToList();
+            this.VoiceCommand.KeyStrokes = _keyStrokes.Select(key => key.WindowsKey).ToList();
             
             this.DialogResult = true;
         }
@@ -106,40 +106,31 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             this.DialogResult = false;
         }
 
-        private void ToggleRecordOp(bool enable)
+        private void ToggleRecordOp(object sender, bool enable)
         {
+            var recordButton = sender as System.Windows.Controls.Button;
+            if (recordButton == null) return;
+
             if (enable)
             {
-                this.uiButRecord.Foreground = new SolidColorBrush(Colors.Red);
-                this.uiButRecord.Content = "Recording";
-                this.uiButRecord.ToolTip = "Click to STOP recording keystrokes.";
-                this.uiButRecord.FontWeight = FontWeights.Bold;
-                this.uiTextBoxKeyStrokes.Foreground = new SolidColorBrush(Colors.Red);
-                this.uiButRecord.PreviewKeyDown += this.uiTextBlockRecord_KeyDown;
-                this.uiTextBoxKeyStrokes.PreviewKeyDown += this.uiTextBlockRecord_KeyDown;
-                //this.uiTextBoxKeyStrokes.Text = string.Empty;
-                //this._keyStrokes.Clear();
+                recordButton.Background = new SolidColorBrush(Colors.Red);
+                recordButton.ToolTip = "Click to STOP recording keystrokes.";
+                uiListViewKeystrokes.PreviewKeyDown += this.uiTextBlockRecord_KeyDown;
             }
             else
             {
-                this.uiButRecord.Foreground = new SolidColorBrush(Colors.Black);
-                this.uiButRecord.Content = "Record";
-                this.uiButRecord.ToolTip = "Click to START recording keystrokes.";
-                this.uiButRecord.FontWeight = FontWeights.Normal;
-                this.uiTextBoxKeyStrokes.Foreground = new SolidColorBrush(Colors.Black);
-                this.uiButRecord.PreviewKeyDown -= this.uiTextBlockRecord_KeyDown;
-                this.uiTextBoxKeyStrokes.PreviewKeyDown -= this.uiTextBlockRecord_KeyDown;
+                recordButton.Background = new SolidColorBrush(Colors.Transparent);
+                recordButton.ToolTip = "Click to START recording keystrokes.";
+                uiListViewKeystrokes.PreviewKeyDown -= this.uiTextBlockRecord_KeyDown;
             }
         }
 
         private void uiButRecord_Click(object sender, RoutedEventArgs e)
         {
             this._isInEditMode = !this._isInEditMode;
-            this.ToggleRecordOp(this._isInEditMode);
+            this.ToggleRecordOp(sender, this._isInEditMode);
         }
 
-        //bool LeftAltKeyPressed = false;
-        //bool RightAltKeyPressed = false;
         private void uiTextBlockRecord_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.IsRepeat)
@@ -150,7 +141,6 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             else if(e.Key == Key.LeftShift || e.Key == Key.RightShift || e.Key == Key.LeftCtrl || 
                 e.Key == Key.RightCtrl || e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
             {
-                this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.Key.ToString() : $"+{e.Key}";
                 this._keyStrokes.Add(new KeyTainer(e.Key));
 
                 e.Handled = true;
@@ -158,14 +148,12 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
             }
             else if(e.Key == Key.System)
             {
-                this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.SystemKey.ToString() : $"+{e.SystemKey}";
                 this._keyStrokes.Add(new KeyTainer(e.SystemKey));
 
                 e.Handled = true;
                 return;
             }
 
-            this.uiTextBoxKeyStrokes.Text += string.IsNullOrWhiteSpace(this.uiTextBoxKeyStrokes.Text) ? e.Key.ToString() : $"+{e.Key}";
             this._keyStrokes.Add(new KeyTainer(e.Key));
 
             e.Handled = true;
@@ -175,43 +163,69 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
         private void uiButClearKeyStrokes_Click(object sender, RoutedEventArgs e)
         {
             this._isInEditMode = false;
-            this.ToggleRecordOp(this._isInEditMode);
-
-            this.uiTextBoxKeyStrokes.Text = string.Empty;
             this._keyStrokes.Clear();
         }
 
-        private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void MoveKeyUpButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender == null)
+            var upButton = sender as System.Windows.Controls.Button;
+            if (upButton == null)
                 return;
 
-            var textBox = sender as System.Windows.Controls.TextBlock;
-            if (textBox == null)
+            var upButtonKeyContext = upButton.DataContext as KeyTainer;
+            if (upButtonKeyContext == null)
                 return;
 
-            _selectedKey = textBox.DataContext as KeyTainer;
+            for(int intI=this._keyStrokes.Count-1; intI>0; intI--)
+            {
+                if(this._keyStrokes[intI].Id.Equals(upButtonKeyContext.Id))
+                {
+                    this._keyStrokes.RemoveAt(intI);
+                    this._keyStrokes.Insert(--intI, upButtonKeyContext);
+                    break;
+                }
+            }
         }
 
-        private void TextBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void MoveKeyDownButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender == null)
+            var upButton = sender as System.Windows.Controls.Button;
+            if (upButton == null)
                 return;
 
-            var textBox = sender as System.Windows.Controls.TextBlock;
-            if (textBox == null)
+            var upButtonKeyContext = upButton.DataContext as KeyTainer;
+            if (upButtonKeyContext == null)
                 return;
 
-            var overKey = (KeyTainer)textBox.DataContext;
+            for (int intI = 0; intI < this._keyStrokes.Count - 1; intI++)
+            {
+                if (this._keyStrokes[intI].Id.Equals(upButtonKeyContext.Id))
+                {
+                    this._keyStrokes.Insert(intI+2, upButtonKeyContext);
+                    this._keyStrokes.RemoveAt(intI);
+                    break;
+                }
+            }
+        }
 
-            if (_selectedKey == null)
+        private void DeleteKeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var upButton = sender as System.Windows.Controls.Button;
+            if (upButton == null)
                 return;
 
-            var indexOfOverKey = this._keyStrokes.IndexOf(overKey);
+            var upButtonKeyContext = upButton.DataContext as KeyTainer;
+            if (upButtonKeyContext == null)
+                return;
 
-            //this._keyStrokes.Remove(_selectedKey);
-
-            _selectedKey = null;
+            for (int intI = this._keyStrokes.Count - 1; intI >= 0; intI--)
+            {
+                if (this._keyStrokes[intI].Id.Equals(upButtonKeyContext.Id))
+                {
+                    this._keyStrokes.RemoveAt(intI);
+                    break;
+                }
+            }
         }
     }
 
@@ -222,13 +236,25 @@ namespace StarTrekNut.VoiceCom.UI.Dialogs
         Copy
     }
 
-    public class KeyTainer
+    public class KeyTainer : IEquatable<KeyTainer>
     {
+        public System.Guid Id { get; private set; }
         public Key WindowsKey { get; private set; }
 
         public KeyTainer(Key windowsKey)
         {
+            this.Id = System.Guid.NewGuid();
             this.WindowsKey = windowsKey;
+        }
+
+        public bool Equals(KeyTainer other)
+        {
+            return this.Id.Equals(other.Id);
+        }
+
+        public override string ToString()
+        {
+            return $"{this.WindowsKey}|{this.Id}";
         }
     }
 }

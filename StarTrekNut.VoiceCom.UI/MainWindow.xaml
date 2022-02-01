@@ -13,6 +13,7 @@
         <classes:KeyConverter x:Key="KeyConverter" />
         <classes:BoolInverseConverter x:Key="BoolInvConverter" />
         <classes:IsEnabledConverter x:Key="IsEnabledConverter" />
+        <classes:ObjectNullToBoolConverter x:Key="ObjectNullToBoolConverter" />
         <classes:VisibilityConverter x:Key="VisibilityConverter" />
         <BitmapImage x:Key="QuestionmarkIcon" UriSource="icons/glyphicons-195-question-sign.png" />
         <BitmapImage x:Key="InfoIcon" UriSource="icons/glyphicons-196-info-sign.png" />
@@ -26,7 +27,7 @@
         </DataTemplate>
         <DataTemplate x:Key="EnableColumnCellTemplate">
             <DockPanel>
-                <CheckBox Foreground="DarkBlue" HorizontalAlignment="Center">
+                <CheckBox Foreground="DarkBlue" HorizontalAlignment="Center" Click="EnableVoiceCommandCheckBox_Click">
                     <CheckBox.IsChecked>
                         <Binding Path="Enabled" Mode="TwoWay" />
                     </CheckBox.IsChecked>
@@ -111,14 +112,7 @@
                        Foreground="Green" Width="Auto" Height="Auto"/>
             </StatusBar>
             <StatusBar Grid.Row="1" Grid.Column="1" FlowDirection="RightToLeft">
-                <!--<Button x:Name="uiButtonCancelCharSettings" IsEnabled="False" Click="uiButtonCancelCharSettings_Click" Content="Cancel" 
-                    Padding="6,2,6,2"
-                    Width="Auto" Height="Auto" ToolTip="Cancel profile and configuration changes and reload from disk." Margin="4,0,0,0" />-->
-                <Button x:Name="uiButtonSaveCharSettings" Click="uiButtonSaveCharSettings_Click" Content="Save Settings" Height="Auto"
-                    Padding="6,2,6,2"
-                    ToolTip="Save profile and configuration information to disk." Width="Auto" Margin="4,0,0,0" />
                 <CheckBox Name="uiCheckboxSpeechEnaled" Content="Speech Recognition" FlowDirection="LeftToRight" 
-                    IsEnabled="{Binding Path=HasProfileChanges, Mode=OneWay, Converter={StaticResource BoolInvConverter}}"
                     IsChecked="{Binding Path=SpeechProcessor.IsRecognizerRunning, Mode=TwoWay}" Margin="4,0,0,0"
                     ToolTip="{Binding Path=HasProfileChanges, Mode=OneWay, Converter={StaticResource IsEnabledConverter}}"/>
             </StatusBar>
@@ -130,10 +124,6 @@
                 <Label Visibility="{Binding Path=HasSoftwareUpdateAvailable, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
                        ToolTip="A newer version of the software is available.">
                     <Image Source="{StaticResource DownloadIcon}" Width="18" Height="18" />
-                </Label>
-                <Label Visibility="{Binding Path=HasProfileChanges, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
-                       ToolTip="Profile changes have disabled Speech Recognition.">
-                    <Image Source="{StaticResource InfoIcon}" Width="18" Height="18" />
                 </Label>
             </StatusBar>
             <TabControl x:Name="uiTabControl" Margin="0,0,0,0" Grid.ColumnSpan="3">
@@ -156,7 +146,7 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Time" Width="100">
+                                    <GridViewColumn Header="Time" Width="140">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <DockPanel>
@@ -169,7 +159,7 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Message" Width="700">
+                                    <GridViewColumn Header="Message" Width="660">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <DockPanel>
@@ -209,19 +199,20 @@
                         <ComboBox Name="uiComboBoxApplication" Grid.Column="1" Margin="87,14,10,0" VerticalAlignment="Top" Height="26"
                                   ItemsSource="{Binding Path=SelectedUser.ExecutableList, Mode=OneWay}"
                                   SelectedItem="{Binding Path=SelectedExecutable, Mode=TwoWay}"
-                                  SelectionChanged="UiComboBoxApplication_SelectionChanged" />
+                                  DropDownClosed="UiComboBoxApplication_SelectionChanged" />
                         <Button Grid.Column="1" IsEnabled="True" x:Name="uiButtonAddApplication" Content="Add App" Height="26" Margin="0,45,104,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="66" Click="uiButtonAddExe_Click"/>
                         <Button Grid.Column="1" IsEnabled="True" x:Name="uiButtonRemoveApplication" Content="Remove App" Height="26" Margin="0,45,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Click="uiButtonRemoveApplication_Click"/>
 
-                        <ComboBox x:Name="uiComboBoxSelectedCharacter" IsEnabled="False"
+                        <ComboBox x:Name="uiComboBoxSelectedCharacter" IsEnabled="{Binding Path=SelectedExecutable, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}"
                                   ItemsSource="{Binding Path=SelectedExecutable.ProfileSettingsList}" 
                                   SelectedItem="{Binding Path=SelectedProfileSettings}"
-                                  SelectionChanged="uiComboBoxSelectedCharacter_SelectionChanged"
+                                  DropDownClosed="uiComboBoxSelectedCharacter_SelectionChanged"
                                   Grid.Column="1" Height="26" Margin="68,100,10,0" VerticalAlignment="Top"/>
 
                         <Label x:Name="label1" Content="Profile:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="53"/>
 
-                        <GroupBox x:Name="uiGroupBoxCreateProfile" IsEnabled="False" Grid.Column="1" Header="Create Profile" Height="144" Margin="10,175,10,0" VerticalAlignment="Top">
+                        <GroupBox x:Name="uiGroupBoxCreateProfile" IsEnabled="{Binding Path=SelectedExecutable, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}" 
+                                  Grid.Column="1" Header="Create Profile" Height="144" Margin="10,175,10,0" VerticalAlignment="Top">
                             <Grid>
                                 <Button x:Name="uiButtonAddCharacter" Content="Create" Click="uiButtonAddCharacter_Click" HorizontalAlignment="Left" Margin="14,43,0,0" VerticalAlignment="Top" Width="67" Height="46"/>
                                 <RadioButton x:Name="uiRadioButtonNew" GroupName="Character" Content="Empty Character" IsChecked="True" HorizontalAlignment="Left" Margin="87,46,0,0" VerticalAlignment="Top" Width="134"/>
@@ -239,8 +230,10 @@
                                 <TextBox x:Name="uiTextBoxNewCharacterName" Height="23" Margin="59,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="179"/>
                             </Grid>
                         </GroupBox>
-                        <Button x:Name="uiButtonRemoveSelectedChar" IsEnabled="False" Click="uiButtonRemoveSelectedChar_Click" Content="Remove Profile" Grid.Column="1" Margin="0,132,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Height="26"/>
-                        <ListView Name="uiListViewVoiceCommands" IsEnabled="False" Margin="10"
+                        <Button x:Name="uiButtonRemoveSelectedChar" IsEnabled="{Binding Path=SelectedProfileSettings, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}" 
+                                Click="uiButtonRemoveSelectedChar_Click" Content="Remove Profile" Grid.Column="1" Margin="0,132,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="89" Height="26"/>
+                        <ListView Name="uiListViewVoiceCommands" IsEnabled="{Binding Path=SelectedProfileSettings, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}"
+                                  Margin="10"
                                   ItemsSource="{Binding Path=SelectedProfileSettings.VoiceCommandList, Mode=TwoWay}">
                             <ListView.View>
                                 <GridView>

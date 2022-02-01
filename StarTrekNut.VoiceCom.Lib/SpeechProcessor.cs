@@ -636,8 +636,6 @@ namespace StarTrekNut.VoiceCom.Lib
 
             if (this._profileCommands != null)
                 this.SetUserProfileCommandGrammerKeyStrokes(this._profileCommands);
-
-            this.NotifyPropertyChange("IsRunning");
         }
 
         /// <summary>
@@ -683,8 +681,6 @@ namespace StarTrekNut.VoiceCom.Lib
                     this._recognizer.RecognizeAsyncCancel();
                 this._recognizer.Dispose();
                 this._recognizer = null;
-
-                this.NotifyPropertyChange("IsRunning");
             }
         }
 
