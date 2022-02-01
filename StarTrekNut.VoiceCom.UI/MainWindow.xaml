@@ -212,7 +212,7 @@
                         <Label x:Name="label1" Content="Profile:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="53"/>
 
                         <GroupBox x:Name="uiGroupBoxCreateProfile" IsEnabled="{Binding Path=SelectedExecutable, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}" 
-                                  Grid.Column="1" Header="Create Profile" Height="148" Margin="10,175,10,0" VerticalAlignment="Top">
+                                  Grid.Column="1" Header="Create New Profile" Height="148" Margin="10,175,10,0" VerticalAlignment="Top">
                             <Grid>
                                 <Button x:Name="uiButtonAddCharacter" Content="Create" Click="uiButtonAddCharacter_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="67" Height="46" ToolTip="Create a new application profile"/>
                                 <RadioButton x:Name="uiRadioButtonNew" ToolTip="Create an empty profile" GroupName="Character" Content="Empty Character" IsChecked="True" HorizontalAlignment="Left" Margin="96,11,0,0" VerticalAlignment="Top" Width="134"/>
@@ -226,8 +226,8 @@
                                         </TransformGroup>
                                     </RadioButton.RenderTransform>
                                 </RadioButton>
-                                <Label ToolTip="The name used when you create a new application profiles" x:Name="label2" Content="New Profile Name:" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top"/>
-                                <TextBox ToolTip="The name used when you create a new application profiles" x:Name="uiTextBoxNewCharacterName" Height="23" Margin="10,91,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                                <Label ToolTip="The name used when you create a new application profile" x:Name="label2" Content="New Profile Name:" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top"/>
+                                <TextBox ToolTip="The name used when you create a new application profile" x:Name="uiTextBoxNewCharacterName" Height="23" Margin="10,91,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                             </Grid>
                         </GroupBox>
                         <Button x:Name="uiButtonRemoveSelectedChar" ToolTip="Remove the selected application profile" IsEnabled="{Binding Path=SelectedProfileSettings, Mode=OneWay, Converter={StaticResource ObjectNullToBoolConverter}}" 
