@@ -1,4 +1,4 @@
-# Voice Command Interface v4.2.0
+# Voice Command Interface v4.2.2
 
 ![VCILogo](OrcYell.png?v17-10-2021) 
 
