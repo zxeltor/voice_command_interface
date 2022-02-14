@@ -127,69 +127,8 @@
                 </Label>
             </StatusBar>
             <TabControl x:Name="uiTabControl" Margin="0,0,0,0" Grid.ColumnSpan="3">
-                <TabItem Header="Log" IsSelected="True">
-                    <Grid Background="#FFE5E5E5">
 
-                        <ListView Name="uiListViewLogs" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" IsEnabled="True" Margin="10,10,10,10">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Type" Width="80">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <DockPanel>
-                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryType, Mode=OneWay}">
-                                                        <TextBlock.Text>
-                                                            <Binding Path="EntryType" Mode="OneWay" />
-                                                        </TextBlock.Text>
-                                                    </TextBlock>
-                                                </DockPanel>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Time" Width="140">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <DockPanel>
-                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryDateTime, Mode=OneWay}">
-                                                        <TextBlock.Text>
-                                                            <Binding Path="EntryDateTime" Mode="OneWay" />
-                                                        </TextBlock.Text>
-                                                    </TextBlock>
-                                                </DockPanel>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Message" Width="660">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <DockPanel>
-                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryMessage, Mode=OneWay}">
-                                                        <TextBlock.Text>
-                                                            <Binding Path="EntryMessage" Mode="OneWay" />
-                                                        </TextBlock.Text>
-                                                    </TextBlock>
-                                                </DockPanel>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Width="50">
-                                        <GridViewColumn.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Button Tag="ClearLogs" Name="uiButtonClearLog" ToolTip="Clear log entries" BorderThickness="0" Background="Transparent" Click="uiButtonClear_Click">
-                                                    <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
-                                                </Button>
-                                            </DataTemplate>
-                                        </GridViewColumn.HeaderTemplate>
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate/>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Profiles">
+                <TabItem Header="Profile" IsSelected="True">
                     <Grid Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="419*"/>
@@ -350,6 +289,68 @@
                                     ToolTip="Enables/Disables software update checks." />
                             </Grid>
                         </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Log">
+                    <Grid Background="#FFE5E5E5">
+
+                        <ListView Name="uiListViewLogs" ItemsSource="{Binding Path=Logger.LogEntries, Mode=OneWay}" IsEnabled="True" Margin="10,10,10,10">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Type" Width="80">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryType, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryType" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Time" Width="140">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryDateTime, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryDateTime" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Message" Width="660">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock Foreground="DarkBlue" HorizontalAlignment="Left" ToolTip="{Binding Path=EntryMessage, Mode=OneWay}">
+                                                        <TextBlock.Text>
+                                                            <Binding Path="EntryMessage" Mode="OneWay" />
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="50">
+                                        <GridViewColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <Button Tag="ClearLogs" Name="uiButtonClearLog" ToolTip="Clear log entries" BorderThickness="0" Background="Transparent" Click="uiButtonClear_Click">
+                                                    <Image Source="Icons/glyphicons-257-delete.png" Width="20" Height="20"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </GridViewColumn.HeaderTemplate>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate/>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </Grid>
                 </TabItem>
             </TabControl>
