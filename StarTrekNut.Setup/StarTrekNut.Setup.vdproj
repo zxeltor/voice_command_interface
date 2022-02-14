@@ -21,8 +21,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1236FB5E604E5CE12DB6C06221BACB28"
+        "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1236FB5E604E5CE12DB6C06221BACB28"
+        "OwnerKey" = "8:_6755E7885C9E316FE9C0210FAFB9C1F8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_29BD7090C6D5CDC4A3F330E14B28BE46"
-        "OwnerKey" = "8:_516D4C45C4EC01334D2E2545D18F339F"
+        "OwnerKey" = "8:_37C08056C4D18A611F46810280EE11A3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -34,13 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_29BD7090C6D5CDC4A3F330E14B28BE46"
-        "OwnerKey" = "8:_ABD96B77A9EBA0FF6860D9D9D9792DD3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_355AFC468F740E8EE23FFF77E182C093"
-        "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
+        "OwnerKey" = "8:_907EB9D441B5935510035EFFDDA3BA76"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,26 +57,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4773F708DAB9158916D4540A964D32F3"
+        "MsmKey" = "8:_37C08056C4D18A611F46810280EE11A3"
         "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_4773F708DAB9158916D4540A964D32F3"
-        "OwnerKey" = "8:_355AFC468F740E8EE23FFF77E182C093"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_516D4C45C4EC01334D2E2545D18F339F"
-        "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_516D4C45C4EC01334D2E2545D18F339F"
-        "OwnerKey" = "8:_ABD96B77A9EBA0FF6860D9D9D9792DD3"
+        "MsmKey" = "8:_37C08056C4D18A611F46810280EE11A3"
+        "OwnerKey" = "8:_907EB9D441B5935510035EFFDDA3BA76"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -87,32 +81,38 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6755E7885C9E316FE9C0210FAFB9C1F8"
+        "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8AAE5074DC508C2A092390864307E5FA"
         "OwnerKey" = "8:_29BD7090C6D5CDC4A3F330E14B28BE46"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A0575D7FFC1BF75EC5057D80C97DD9DF"
-        "OwnerKey" = "8:_4773F708DAB9158916D4540A964D32F3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A0575D7FFC1BF75EC5057D80C97DD9DF"
+        "MsmKey" = "8:_907EB9D441B5935510035EFFDDA3BA76"
         "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_ABD96B77A9EBA0FF6860D9D9D9792DD3"
-        "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
+        "MsmKey" = "8:_907EB9D441B5935510035EFFDDA3BA76"
+        "OwnerKey" = "8:_6755E7885C9E316FE9C0210FAFB9C1F8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_ABD96B77A9EBA0FF6860D9D9D9792DD3"
-        "OwnerKey" = "8:_355AFC468F740E8EE23FFF77E182C093"
+        "MsmKey" = "8:_B88FA702AFB2A6E268311560825F2E77"
+        "OwnerKey" = "8:_1236FB5E604E5CE12DB6C06221BACB28"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B88FA702AFB2A6E268311560825F2E77"
+        "OwnerKey" = "8:_5EF5CA91836A4F4FBA14487BE2A48F66"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -154,19 +154,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_355AFC468F740E8EE23FFF77E182C093"
+        "OwnerKey" = "8:_6755E7885C9E316FE9C0210FAFB9C1F8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4773F708DAB9158916D4540A964D32F3"
+        "OwnerKey" = "8:_1236FB5E604E5CE12DB6C06221BACB28"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A0575D7FFC1BF75EC5057D80C97DD9DF"
+        "OwnerKey" = "8:_B88FA702AFB2A6E268311560825F2E77"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -325,20 +325,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_29BD7090C6D5CDC4A3F330E14B28BE46"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1236FB5E604E5CE12DB6C06221BACB28"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51"
+            "AssemblyAsmDisplayName" = "8:StarTrekNut.Utils, Version=4.2.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_29BD7090C6D5CDC4A3F330E14B28BE46"
+                    "_1236FB5E604E5CE12DB6C06221BACB28"
                     {
-                    "Name" = "8:netstandard.dll"
+                    "Name" = "8:StarTrekNut.Utils.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:netstandard.dll"
+            "SourcePath" = "8:StarTrekNut.Utils.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0D1B3D90478B44C194D3973FE0002223"
@@ -356,20 +356,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_355AFC468F740E8EE23FFF77E182C093"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_29BD7090C6D5CDC4A3F330E14B28BE46"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StarTrekNut.VoiceCom.Lib, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51"
                 "ScatterAssemblies"
                 {
-                    "_355AFC468F740E8EE23FFF77E182C093"
+                    "_29BD7090C6D5CDC4A3F330E14B28BE46"
                     {
-                    "Name" = "8:StarTrekNut.VoiceCom.Lib.dll"
+                    "Name" = "8:netstandard.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:StarTrekNut.VoiceCom.Lib.dll"
+            "SourcePath" = "8:netstandard.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0D1B3D90478B44C194D3973FE0002223"
@@ -418,45 +418,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4773F708DAB9158916D4540A964D32F3"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:StarTrekNut.Utils, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_4773F708DAB9158916D4540A964D32F3"
-                    {
-                    "Name" = "8:StarTrekNut.Utils.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:StarTrekNut.Utils.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_0D1B3D90478B44C194D3973FE0002223"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_516D4C45C4EC01334D2E2545D18F339F"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_37C08056C4D18A611F46810280EE11A3"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:NAudio.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_516D4C45C4EC01334D2E2545D18F339F"
+                    "_37C08056C4D18A611F46810280EE11A3"
                     {
                     "Name" = "8:NAudio.Core.dll"
                     "Attributes" = "3:512"
@@ -500,6 +469,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6755E7885C9E316FE9C0210FAFB9C1F8"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:StarTrekNut.VoiceCom.Lib, Version=4.2.1.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_6755E7885C9E316FE9C0210FAFB9C1F8"
+                    {
+                    "Name" = "8:StarTrekNut.VoiceCom.Lib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:StarTrekNut.VoiceCom.Lib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_0D1B3D90478B44C194D3973FE0002223"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8AAE5074DC508C2A092390864307E5FA"
             {
             "AssemblyRegister" = "3:1"
@@ -531,20 +531,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A0575D7FFC1BF75EC5057D80C97DD9DF"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_907EB9D441B5935510035EFFDDA3BA76"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WindowsInput, Version=0.2.0.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NAudio.Wasapi, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A0575D7FFC1BF75EC5057D80C97DD9DF"
+                    "_907EB9D441B5935510035EFFDDA3BA76"
                     {
-                    "Name" = "8:WindowsInput.dll"
+                    "Name" = "8:NAudio.Wasapi.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:WindowsInput.dll"
+            "SourcePath" = "8:NAudio.Wasapi.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0D1B3D90478B44C194D3973FE0002223"
@@ -562,20 +562,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ABD96B77A9EBA0FF6860D9D9D9792DD3"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B88FA702AFB2A6E268311560825F2E77"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NAudio.Wasapi, Version=2.0.0.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WindowsInput, Version=0.2.0.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_ABD96B77A9EBA0FF6860D9D9D9792DD3"
+                    "_B88FA702AFB2A6E268311560825F2E77"
                     {
-                    "Name" = "8:NAudio.Wasapi.dll"
+                    "Name" = "8:WindowsInput.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:NAudio.Wasapi.dll"
+            "SourcePath" = "8:WindowsInput.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0D1B3D90478B44C194D3973FE0002223"
@@ -742,15 +742,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Voice Command Interface"
-        "ProductCode" = "8:{DD59695C-8AE2-4669-8C57-CF6087EB8947}"
-        "PackageCode" = "8:{F17848AD-0AAC-4F9C-A761-D78112B731E0}"
+        "ProductCode" = "8:{331BCC64-BCCA-4926-8E41-09437CB7F0D7}"
+        "PackageCode" = "8:{EDD75C35-8921-455E-BB58-FABD9640E587}"
         "UpgradeCode" = "8:{24F84DF6-EB76-4D4E-B0B1-DFAAF96671FD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:4.2.0"
+        "ProductVersion" = "8:4.2.2"
         "Manufacturer" = "8:Zxeltor"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.starfleet.engineer/projects"
