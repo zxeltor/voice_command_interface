@@ -1,4 +1,4 @@
-# Voice Command Interface v4.2.2
+# Voice Command Interface [![GitHub release (latest by date)](https://img.shields.io/github/v/release/zxeltor/voice_command_interface)](https://github.com/zxeltor/voice_command_interface/releases/latest)
 
 ![VCILogo](OrcYell.png?v17-10-2021) 
 
